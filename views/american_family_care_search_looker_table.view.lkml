@@ -40,30 +40,17 @@ view: american_family_care_search_looker_table {
     convert_tz: no
     datatype: date
     sql: ${TABLE}."Date" ;;
-    timeframes: [raw, date, week, month, quarter, year]
+    timeframes: [raw, date, week, month, month_num, quarter, year, day_of_week, day_of_week_index, day_of_month]
     drill_fields: [date_date]
   }
 
   dimension: day { type: string sql: ${TABLE}."Day" ;;
     group_label: "Date"
     label: "Day of the week"
-    order_by_field: day_of_week_num
+    order_by_field: date_day_of_week_index
   }
 
   # Generated as type: string. Cast so date maths and sorting work.
-  # Sort helpers for Day and Month names (Mon = 1 ... Sun = 7, Jan = 1 ... Dec = 12)
-  dimension: day_of_week_num {
-    hidden: yes
-    type: number
-    sql: DAYOFWEEKISO(${TABLE}."Date") ;;
-  }
-
-  dimension: month_num {
-    hidden: yes
-    type: number
-    sql: MONTH(${TABLE}."Date") ;;
-  }
-
   dimension: week_start {
     group_label: "Date"
     label: "Week start (Mon)"
@@ -97,7 +84,7 @@ view: american_family_care_search_looker_table {
     description: "W40, 28 Sep to 04 Oct."
     type: string
     sql: 'W' || ${week_of_year} || ', ' || TO_CHAR(TRY_TO_DATE(${TABLE}."Week_Start"::VARCHAR), 'DD Mon')
-      || ' to ' || TO_CHAR(TRY_TO_DATE(${TABLE}."Week_End"::VARCHAR), 'DD Mon') ;;
+         || ' to ' || TO_CHAR(TRY_TO_DATE(${TABLE}."Week_End"::VARCHAR), 'DD Mon') ;;
     order_by_field: week_start
   }
 
@@ -105,7 +92,7 @@ view: american_family_care_search_looker_table {
     group_label: "Date"
     label: "Month name"
     description: "Month name as stored in the table. Budget is matched on it."
-    order_by_field: month_num
+    order_by_field: date_month_num
   }
 
   dimension: year { type: number sql: ${TABLE}."Year" ;;
@@ -357,21 +344,12 @@ view: american_family_care_search_looker_table {
   parameter: comparison_mode {
     group_label: "Controls"
     label: "Compare"
-    description: "What the *_cur window is compared with. Anchored on the end of the date range, or the latest day with data."
+    description: "What the *_cur window is compared with: the previous period of the same length, the same period last year, or nothing."
     type: unquoted
     default_value: "prev"
     allowed_value: { label: "Previous period (same length)"              value: "prev" }
     allowed_value: { label: "Same period last year"                      value: "py" }
     allowed_value: { label: "No comparison"                              value: "none" }
-    allowed_value: { label: "Latest day vs previous day"                 value: "dodPrev" }
-    allowed_value: { label: "Latest day vs same weekday last week"       value: "dodWeek" }
-    allowed_value: { label: "Latest day vs daily average of date range"  value: "dodAvg" }
-    allowed_value: { label: "Last complete week vs week before"          value: "wowComplete" }
-    allowed_value: { label: "Week to date vs same days last week"        value: "wowWtd" }
-    allowed_value: { label: "Last complete week vs prior 4-week average" value: "wowAvg4" }
-    allowed_value: { label: "Last complete month vs month before"        value: "momComplete" }
-    allowed_value: { label: "Month to date vs same days last month"      value: "momMtd" }
-    allowed_value: { label: "Last complete month vs prior 3-month average" value: "momAvg3" }
   }
 
   parameter: delta_format {
@@ -1146,7 +1124,7 @@ view: american_family_care_search_looker_table {
     label: "VTR (view rate)"
     description: "Video views / Impressions."
     type: number
-    sql: ${total_video_views} / NULLIF(${total_impressions}, 0) ;;
+    sql: NULLIF(${total_video_views}, 0) / NULLIF(${total_impressions}, 0) ;;
     value_format: "0.00%"
     drill_fields: [drill_campaign*]
     link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
@@ -1169,7 +1147,7 @@ view: american_family_care_search_looker_table {
     label: "Video completion rate"
     description: "Video completions / Video views."
     type: number
-    sql: ${total_video_completions} / NULLIF(${total_video_views}, 0) ;;
+    sql: NULLIF(${total_video_completions}, 0) / NULLIF(${total_video_views}, 0) ;;
     value_format: "0.00%"
     drill_fields: [drill_campaign*]
     link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
@@ -1351,27 +1329,6 @@ view: american_family_care_search_looker_table {
     link: { label: "By Month" url: "@{AFC_DRILL_BY_MONTH}" }
   }
 
-  measure: is_impressions {
-    hidden: yes
-    group_label: "Competition"
-    label: "is_impressions"
-    type: sum
-    sql: ZEROIFNULL(${impressions}) ;;
-    filters: [has_impression_share: "yes"]
-    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
-    drill_fields: [drill_campaign*]
-  }
-
-  measure: lost_budget_weighted {
-    hidden: yes
-    group_label: "Competition"
-    label: "lost_budget_weighted"
-    type: sum
-    sql: ZEROIFNULL(${search_impressions_lost_to_budget}) ;;
-    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
-    drill_fields: [drill_campaign*]
-  }
-
   measure: cs_clicks {
     hidden: yes
     group_label: "Competition"
@@ -1389,6 +1346,27 @@ view: american_family_care_search_looker_table {
     label: "lost_rank_weighted"
     type: sum
     sql: ZEROIFNULL(${search_impressions_lost_to_rank}) ;;
+    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
+    drill_fields: [drill_campaign*]
+  }
+
+  measure: lost_budget_weighted {
+    hidden: yes
+    group_label: "Competition"
+    label: "lost_budget_weighted"
+    type: sum
+    sql: ZEROIFNULL(${search_impressions_lost_to_budget}) ;;
+    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
+    drill_fields: [drill_campaign*]
+  }
+
+  measure: is_impressions {
+    hidden: yes
+    group_label: "Competition"
+    label: "is_impressions"
+    type: sum
+    sql: ZEROIFNULL(${impressions}) ;;
+    filters: [has_impression_share: "yes"]
     value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
     drill_fields: [drill_campaign*]
   }
@@ -1421,7 +1399,7 @@ view: american_family_care_search_looker_table {
     description: "Days from the 1st of the month to the latest day with performance data."
     type: number
     sql: DATEDIFF('day', DATE_TRUNC('month', MAX(CASE WHEN ${is_performance_row} THEN ${TABLE}."Date" END)),
-      MAX(CASE WHEN ${is_performance_row} THEN ${TABLE}."Date" END)) + 1 ;;
+                         MAX(CASE WHEN ${is_performance_row} THEN ${TABLE}."Date" END)) + 1 ;;
     value_format_name: decimal_0
   }
 
@@ -1525,14 +1503,14 @@ view: american_family_care_search_looker_table {
     hidden: yes
     type: string
     sql: CASE WHEN DAYOFWEEKISO(${cmp_anchor}) = 7 THEN ${cmp_anchor}
-      ELSE DATEADD('day', -DAYOFWEEKISO(${cmp_anchor}), ${cmp_anchor}) END ;;
+              ELSE DATEADD('day', -DAYOFWEEKISO(${cmp_anchor}), ${cmp_anchor}) END ;;
   }
 
   dimension: cmp_month_end {
     hidden: yes
     type: string
     sql: CASE WHEN ${cmp_anchor} = LAST_DAY(${cmp_anchor}) THEN ${cmp_anchor}
-      ELSE DATEADD('day', -1, DATE_TRUNC('month', ${cmp_anchor})) END ;;
+              ELSE DATEADD('day', -1, DATE_TRUNC('month', ${cmp_anchor})) END ;;
   }
 
   dimension: cmp_cur_start {
@@ -1609,7 +1587,7 @@ view: american_family_care_search_looker_table {
     hidden: yes
     type: yesno
     sql: {% if comparison_mode._parameter_value == 'none' %} FALSE
-      {% else %} ${TABLE}."Date" BETWEEN ${cmp_prior_start} AND ${cmp_prior_end} {% endif %} ;;
+         {% else %} ${TABLE}."Date" BETWEEN ${cmp_prior_start} AND ${cmp_prior_end} {% endif %} ;;
   }
 
   dimension: in_cmp_scope {
@@ -2705,7 +2683,7 @@ view: american_family_care_search_looker_table {
     group_label: "PoP - Video"
     label: "VTR (view rate)"
     type: number
-    sql: ${total_video_views_cur_sum} / NULLIF(${total_impressions_cur_sum}, 0) ;;
+    sql: NULLIF(${total_video_views_cur_sum}, 0) / NULLIF(${total_impressions_cur_sum}, 0) ;;
     value_format: "0.00%"
     drill_fields: [drill_campaign*]
     link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
@@ -2726,7 +2704,7 @@ view: american_family_care_search_looker_table {
     group_label: "PoP - Video"
     label: "VTR (view rate) (comparison)"
     type: number
-    sql: ${total_video_views_prior_sum} / NULLIF(${total_impressions_prior_sum}, 0) ;;
+    sql: NULLIF(${total_video_views_prior_sum}, 0) / NULLIF(${total_impressions_prior_sum}, 0) ;;
     value_format: "0.00%"
   }
   measure: vtr_delta {
@@ -2747,7 +2725,7 @@ view: american_family_care_search_looker_table {
     group_label: "PoP - Video"
     label: "Video completion rate"
     type: number
-    sql: ${total_video_completions_cur_sum} / NULLIF(${total_video_views_cur_sum}, 0) ;;
+    sql: NULLIF(${total_video_completions_cur_sum}, 0) / NULLIF(${total_video_views_cur_sum}, 0) ;;
     value_format: "0.00%"
     drill_fields: [drill_campaign*]
     link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
@@ -2768,7 +2746,7 @@ view: american_family_care_search_looker_table {
     group_label: "PoP - Video"
     label: "Video completion rate (comparison)"
     type: number
-    sql: ${total_video_completions_prior_sum} / NULLIF(${total_video_views_prior_sum}, 0) ;;
+    sql: NULLIF(${total_video_completions_prior_sum}, 0) / NULLIF(${total_video_views_prior_sum}, 0) ;;
     value_format: "0.00%"
   }
   measure: vcr_delta {
@@ -3070,6 +3048,745 @@ view: american_family_care_search_looker_table {
     label: "Click share delta"
     type: number
     sql: {% if delta_format._parameter_value == 'abs' %} ${click_share_cur} - ${click_share_prior} {% else %} (${click_share_cur} - ${click_share_prior}) / NULLIF(ABS(${click_share_prior}), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'pct' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  ######## MEASURES - % CHANGE VS COMPARISON PERIOD (KPI scorecards) ########
+
+  # <metric>_pop: plain % change of the current window vs the comparison window,
+  # formatted with an arrow. Used as the comparison value of single-value tiles
+  # (comparison_type: value), so the scorecard reads e.g. '▲ 12.3% vs PP'.
+
+  measure: total_cost_pop {
+    group_label: "PoP - Spend & traffic"
+    label: "Spend % change"
+    type: number
+    sql: (${total_cost_cur} - ${total_cost_prior}) / NULLIF(ABS(${total_cost_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: total_impressions_pop {
+    group_label: "PoP - Spend & traffic"
+    label: "Impressions % change"
+    type: number
+    sql: (${total_impressions_cur} - ${total_impressions_prior}) / NULLIF(ABS(${total_impressions_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: total_clicks_pop {
+    group_label: "PoP - Spend & traffic"
+    label: "Clicks % change"
+    type: number
+    sql: (${total_clicks_cur} - ${total_clicks_prior}) / NULLIF(ABS(${total_clicks_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: ctr_pop {
+    group_label: "PoP - Spend & traffic"
+    label: "CTR % change"
+    type: number
+    sql: (${ctr_cur} - ${ctr_prior}) / NULLIF(ABS(${ctr_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: cpc_pop {
+    group_label: "PoP - Spend & traffic"
+    label: "CPC % change"
+    type: number
+    sql: (${cpc_cur} - ${cpc_prior}) / NULLIF(ABS(${cpc_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: cpm_pop {
+    group_label: "PoP - Spend & traffic"
+    label: "CPM % change"
+    type: number
+    sql: (${cpm_cur} - ${cpm_prior}) / NULLIF(ABS(${cpm_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: engine_conversions_pop {
+    group_label: "PoP - Conversions"
+    label: "Engine conversions % change"
+    type: number
+    sql: (${engine_conversions_cur} - ${engine_conversions_prior}) / NULLIF(ABS(${engine_conversions_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: all_conversions_pop {
+    group_label: "PoP - Conversions"
+    label: "All conversion actions % change"
+    type: number
+    sql: (${all_conversions_cur} - ${all_conversions_prior}) / NULLIF(ABS(${all_conversions_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: appointments_pop {
+    group_label: "PoP - Conversions"
+    label: "Appointments % change"
+    type: number
+    sql: (${appointments_cur} - ${appointments_prior}) / NULLIF(ABS(${appointments_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: cost_per_appointment_pop {
+    group_label: "PoP - Conversions"
+    label: "Cost per appointment % change"
+    type: number
+    sql: (${cost_per_appointment_cur} - ${cost_per_appointment_prior}) / NULLIF(ABS(${cost_per_appointment_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: calls_pop {
+    group_label: "PoP - Conversions"
+    label: "Calls % change"
+    type: number
+    sql: (${calls_cur} - ${calls_prior}) / NULLIF(ABS(${calls_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: cost_per_call_pop {
+    group_label: "PoP - Conversions"
+    label: "Cost per call % change"
+    type: number
+    sql: (${cost_per_call_cur} - ${cost_per_call_prior}) / NULLIF(ABS(${cost_per_call_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: clinic_leads_pop {
+    group_label: "PoP - Conversions"
+    label: "Clinic leads % change"
+    type: number
+    sql: (${clinic_leads_cur} - ${clinic_leads_prior}) / NULLIF(ABS(${clinic_leads_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: cost_per_lead_pop {
+    group_label: "PoP - Conversions"
+    label: "Cost per lead % change"
+    type: number
+    sql: (${cost_per_lead_cur} - ${cost_per_lead_prior}) / NULLIF(ABS(${cost_per_lead_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: total_clickthrough_conversions_pop {
+    group_label: "PoP - Conversions"
+    label: "Click-through conversions % change"
+    type: number
+    sql: (${total_clickthrough_conversions_cur} - ${total_clickthrough_conversions_prior}) / NULLIF(ABS(${total_clickthrough_conversions_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: total_viewthrough_conversions_pop {
+    group_label: "PoP - Conversions"
+    label: "View-through conversions % change"
+    type: number
+    sql: (${total_viewthrough_conversions_cur} - ${total_viewthrough_conversions_prior}) / NULLIF(ABS(${total_viewthrough_conversions_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: cvr_pop {
+    group_label: "PoP - Conversions"
+    label: "CVR % change"
+    type: number
+    sql: (${cvr_cur} - ${cvr_prior}) / NULLIF(ABS(${cvr_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: cpa_pop {
+    group_label: "PoP - Conversions"
+    label: "CPA % change"
+    type: number
+    sql: (${cpa_cur} - ${cpa_prior}) / NULLIF(ABS(${cpa_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: total_revenue_pop {
+    group_label: "PoP - Value"
+    label: "Revenue % change"
+    type: number
+    sql: (${total_revenue_cur} - ${total_revenue_prior}) / NULLIF(ABS(${total_revenue_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: revenue_all_actions_pop {
+    group_label: "PoP - Value"
+    label: "Revenue (all actions) % change"
+    type: number
+    sql: (${revenue_all_actions_cur} - ${revenue_all_actions_prior}) / NULLIF(ABS(${revenue_all_actions_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: roas_pop {
+    group_label: "PoP - Value"
+    label: "ROAS % change"
+    type: number
+    sql: (${roas_cur} - ${roas_prior}) / NULLIF(ABS(${roas_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: value_per_conversion_pop {
+    group_label: "PoP - Value"
+    label: "Value per conversion % change"
+    type: number
+    sql: (${value_per_conversion_cur} - ${value_per_conversion_prior}) / NULLIF(ABS(${value_per_conversion_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: total_video_views_pop {
+    group_label: "PoP - Video"
+    label: "Video views % change"
+    type: number
+    sql: (${total_video_views_cur} - ${total_video_views_prior}) / NULLIF(ABS(${total_video_views_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: total_video_completions_pop {
+    group_label: "PoP - Video"
+    label: "Video completions % change"
+    type: number
+    sql: (${total_video_completions_cur} - ${total_video_completions_prior}) / NULLIF(ABS(${total_video_completions_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: vtr_pop {
+    group_label: "PoP - Video"
+    label: "VTR (view rate) % change"
+    type: number
+    sql: (${vtr_cur} - ${vtr_prior}) / NULLIF(ABS(${vtr_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: vcr_pop {
+    group_label: "PoP - Video"
+    label: "Video completion rate % change"
+    type: number
+    sql: (${vcr_cur} - ${vcr_prior}) / NULLIF(ABS(${vcr_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: cpv_pop {
+    group_label: "PoP - Video"
+    label: "CPV % change"
+    type: number
+    sql: (${cpv_cur} - ${cpv_prior}) / NULLIF(ABS(${cpv_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: eligible_impressions_pop {
+    group_label: "PoP - Competition"
+    label: "Eligible impressions % change"
+    type: number
+    sql: (${eligible_impressions_cur} - ${eligible_impressions_prior}) / NULLIF(ABS(${eligible_impressions_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: impression_share_pop {
+    group_label: "PoP - Competition"
+    label: "Search impression share % change"
+    type: number
+    sql: (${impression_share_cur} - ${impression_share_prior}) / NULLIF(ABS(${impression_share_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: lost_is_rank_pop {
+    group_label: "PoP - Competition"
+    label: "Lost IS (rank) % change"
+    type: number
+    sql: (${lost_is_rank_cur} - ${lost_is_rank_prior}) / NULLIF(ABS(${lost_is_rank_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: lost_is_budget_pop {
+    group_label: "PoP - Competition"
+    label: "Lost IS (budget) % change"
+    type: number
+    sql: (${lost_is_budget_cur} - ${lost_is_budget_prior}) / NULLIF(ABS(${lost_is_budget_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: eligible_clicks_pop {
+    group_label: "PoP - Competition"
+    label: "Eligible clicks % change"
+    type: number
+    sql: (${eligible_clicks_cur} - ${eligible_clicks_prior}) / NULLIF(ABS(${eligible_clicks_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: click_share_pop {
+    group_label: "PoP - Competition"
+    label: "Click share % change"
+    type: number
+    sql: (${click_share_cur} - ${click_share_prior}) / NULLIF(ABS(${click_share_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  ######## MEASURES - ROW OVER ROW (DoD / WoW / MoM tables) ########
+
+  # <metric>_change: this row vs the row before it, ordered by date. Works for
+  # any time grain on the rows (day, week label, month) because it orders by the
+  # earliest date in each row. % or absolute follows the delta_format parameter.
+  # Totals rows show nothing (there is no previous row).
+
+  measure: total_cost_change {
+    group_label: "Row over row - Spend & traffic"
+    label: "Δ Spend"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${total_cost} - LAG(${total_cost}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${total_cost} - LAG(${total_cost}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${total_cost}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'none' %}
+      {% assign f = 'money' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: total_impressions_change {
+    group_label: "Row over row - Spend & traffic"
+    label: "Δ Impressions"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${total_impressions} - LAG(${total_impressions}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${total_impressions} - LAG(${total_impressions}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${total_impressions}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: total_clicks_change {
+    group_label: "Row over row - Spend & traffic"
+    label: "Δ Clicks"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${total_clicks} - LAG(${total_clicks}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${total_clicks} - LAG(${total_clicks}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${total_clicks}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: ctr_change {
+    group_label: "Row over row - Spend & traffic"
+    label: "Δ CTR"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${ctr} - LAG(${ctr}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${ctr} - LAG(${ctr}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${ctr}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'pct' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cpc_change {
+    group_label: "Row over row - Spend & traffic"
+    label: "Δ CPC"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cpc} - LAG(${cpc}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${cpc} - LAG(${cpc}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${cpc}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cpm_change {
+    group_label: "Row over row - Spend & traffic"
+    label: "Δ CPM"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cpm} - LAG(${cpm}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${cpm} - LAG(${cpm}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${cpm}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: engine_conversions_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Engine conversions"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${engine_conversions} - LAG(${engine_conversions}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${engine_conversions} - LAG(${engine_conversions}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${engine_conversions}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: all_conversions_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ All conversion actions"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${all_conversions} - LAG(${all_conversions}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${all_conversions} - LAG(${all_conversions}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${all_conversions}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: appointments_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Appointments"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${appointments} - LAG(${appointments}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${appointments} - LAG(${appointments}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${appointments}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cost_per_appointment_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Cost per appointment"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cost_per_appointment} - LAG(${cost_per_appointment}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${cost_per_appointment} - LAG(${cost_per_appointment}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${cost_per_appointment}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: calls_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Calls"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${calls} - LAG(${calls}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${calls} - LAG(${calls}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${calls}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cost_per_call_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Cost per call"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cost_per_call} - LAG(${cost_per_call}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${cost_per_call} - LAG(${cost_per_call}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${cost_per_call}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: clinic_leads_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Clinic leads"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${clinic_leads} - LAG(${clinic_leads}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${clinic_leads} - LAG(${clinic_leads}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${clinic_leads}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cost_per_lead_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Cost per lead"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cost_per_lead} - LAG(${cost_per_lead}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${cost_per_lead} - LAG(${cost_per_lead}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${cost_per_lead}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: total_clickthrough_conversions_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Click-through conversions"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${total_clickthrough_conversions} - LAG(${total_clickthrough_conversions}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${total_clickthrough_conversions} - LAG(${total_clickthrough_conversions}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${total_clickthrough_conversions}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: total_viewthrough_conversions_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ View-through conversions"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${total_viewthrough_conversions} - LAG(${total_viewthrough_conversions}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${total_viewthrough_conversions} - LAG(${total_viewthrough_conversions}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${total_viewthrough_conversions}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cvr_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ CVR"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cvr} - LAG(${cvr}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${cvr} - LAG(${cvr}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${cvr}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'pct' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cpa_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ CPA"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cpa} - LAG(${cpa}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${cpa} - LAG(${cpa}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${cpa}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: total_revenue_change {
+    group_label: "Row over row - Value"
+    label: "Δ Revenue"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${total_revenue} - LAG(${total_revenue}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${total_revenue} - LAG(${total_revenue}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${total_revenue}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'money' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: revenue_all_actions_change {
+    group_label: "Row over row - Value"
+    label: "Δ Revenue (all actions)"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${revenue_all_actions} - LAG(${revenue_all_actions}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${revenue_all_actions} - LAG(${revenue_all_actions}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${revenue_all_actions}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'money' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: roas_change {
+    group_label: "Row over row - Value"
+    label: "Δ ROAS"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${roas} - LAG(${roas}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${roas} - LAG(${roas}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${roas}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'x' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: value_per_conversion_change {
+    group_label: "Row over row - Value"
+    label: "Δ Value per conversion"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${value_per_conversion} - LAG(${value_per_conversion}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${value_per_conversion} - LAG(${value_per_conversion}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${value_per_conversion}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: total_video_views_change {
+    group_label: "Row over row - Video"
+    label: "Δ Video views"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${total_video_views} - LAG(${total_video_views}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${total_video_views} - LAG(${total_video_views}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${total_video_views}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: total_video_completions_change {
+    group_label: "Row over row - Video"
+    label: "Δ Video completions"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${total_video_completions} - LAG(${total_video_completions}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${total_video_completions} - LAG(${total_video_completions}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${total_video_completions}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: vtr_change {
+    group_label: "Row over row - Video"
+    label: "Δ VTR (view rate)"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${vtr} - LAG(${vtr}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${vtr} - LAG(${vtr}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${vtr}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'pct' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: vcr_change {
+    group_label: "Row over row - Video"
+    label: "Δ Video completion rate"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${vcr} - LAG(${vcr}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${vcr} - LAG(${vcr}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${vcr}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'pct' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cpv_change {
+    group_label: "Row over row - Video"
+    label: "Δ CPV"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cpv} - LAG(${cpv}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${cpv} - LAG(${cpv}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${cpv}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: eligible_impressions_change {
+    group_label: "Row over row - Competition"
+    label: "Δ Eligible impressions"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${eligible_impressions} - LAG(${eligible_impressions}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${eligible_impressions} - LAG(${eligible_impressions}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${eligible_impressions}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: impression_share_change {
+    group_label: "Row over row - Competition"
+    label: "Δ Search impression share"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${impression_share} - LAG(${impression_share}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${impression_share} - LAG(${impression_share}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${impression_share}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'pct' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: lost_is_rank_change {
+    group_label: "Row over row - Competition"
+    label: "Δ Lost IS (rank)"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${lost_is_rank} - LAG(${lost_is_rank}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${lost_is_rank} - LAG(${lost_is_rank}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${lost_is_rank}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'pct' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: lost_is_budget_change {
+    group_label: "Row over row - Competition"
+    label: "Δ Lost IS (budget)"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${lost_is_budget} - LAG(${lost_is_budget}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${lost_is_budget} - LAG(${lost_is_budget}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${lost_is_budget}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'pct' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: eligible_clicks_change {
+    group_label: "Row over row - Competition"
+    label: "Δ Eligible clicks"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${eligible_clicks} - LAG(${eligible_clicks}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${eligible_clicks} - LAG(${eligible_clicks}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${eligible_clicks}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: click_share_change {
+    group_label: "Row over row - Competition"
+    label: "Δ Click share"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${click_share} - LAG(${click_share}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${click_share} - LAG(${click_share}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${click_share}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
     html:
       {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
       {% assign pol = 'up' %}
