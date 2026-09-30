@@ -40,14 +40,27 @@ view: american_family_care_search_looker_table {
     convert_tz: no
     datatype: date
     sql: ${TABLE}."Date" ;;
-    timeframes: [raw, date, week, month, month_num, quarter, year, day_of_week, day_of_week_index, day_of_month]
+    timeframes: [raw, date, week, month, quarter, year]
     drill_fields: [date_date]
   }
 
   dimension: day { type: string sql: ${TABLE}."Day" ;;
     group_label: "Date"
     label: "Day of the week"
-    order_by_field: date_day_of_week_index
+    order_by_field: day_of_week_num
+  }
+
+  # Sort helpers for Day and Month names (Mon = 1 ... Sun = 7, Jan = 1 ... Dec = 12)
+  dimension: day_of_week_num {
+    hidden: yes
+    type: number
+    sql: DAYOFWEEKISO(${TABLE}."Date") ;;
+  }
+
+  dimension: month_num {
+    hidden: yes
+    type: number
+    sql: MONTH(${TABLE}."Date") ;;
   }
 
   # Generated as type: string. Cast so date maths and sorting work.
@@ -92,7 +105,7 @@ view: american_family_care_search_looker_table {
     group_label: "Date"
     label: "Month name"
     description: "Month name as stored in the table. Budget is matched on it."
-    order_by_field: date_month_num
+    order_by_field: month_num
   }
 
   dimension: year { type: number sql: ${TABLE}."Year" ;;
@@ -1329,6 +1342,16 @@ view: american_family_care_search_looker_table {
     link: { label: "By Month" url: "@{AFC_DRILL_BY_MONTH}" }
   }
 
+  measure: lost_budget_weighted {
+    hidden: yes
+    group_label: "Competition"
+    label: "lost_budget_weighted"
+    type: sum
+    sql: ZEROIFNULL(${search_impressions_lost_to_budget}) ;;
+    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
+    drill_fields: [drill_campaign*]
+  }
+
   measure: cs_clicks {
     hidden: yes
     group_label: "Competition"
@@ -1340,26 +1363,6 @@ view: american_family_care_search_looker_table {
     drill_fields: [drill_campaign*]
   }
 
-  measure: lost_rank_weighted {
-    hidden: yes
-    group_label: "Competition"
-    label: "lost_rank_weighted"
-    type: sum
-    sql: ZEROIFNULL(${search_impressions_lost_to_rank}) ;;
-    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
-    drill_fields: [drill_campaign*]
-  }
-
-  measure: lost_budget_weighted {
-    hidden: yes
-    group_label: "Competition"
-    label: "lost_budget_weighted"
-    type: sum
-    sql: ZEROIFNULL(${search_impressions_lost_to_budget}) ;;
-    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
-    drill_fields: [drill_campaign*]
-  }
-
   measure: is_impressions {
     hidden: yes
     group_label: "Competition"
@@ -1367,6 +1370,16 @@ view: american_family_care_search_looker_table {
     type: sum
     sql: ZEROIFNULL(${impressions}) ;;
     filters: [has_impression_share: "yes"]
+    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
+    drill_fields: [drill_campaign*]
+  }
+
+  measure: lost_rank_weighted {
+    hidden: yes
+    group_label: "Competition"
+    label: "lost_rank_weighted"
+    type: sum
+    sql: ZEROIFNULL(${search_impressions_lost_to_rank}) ;;
     value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
     drill_fields: [drill_campaign*]
   }
@@ -1499,82 +1512,38 @@ view: american_family_care_search_looker_table {
          {% else %} DATEADD('day', -29, ${cmp_anchor}) {% endif %} ;;
   }
 
-  dimension: cmp_week_end {
-    hidden: yes
-    type: string
-    sql: CASE WHEN DAYOFWEEKISO(${cmp_anchor}) = 7 THEN ${cmp_anchor}
-              ELSE DATEADD('day', -DAYOFWEEKISO(${cmp_anchor}), ${cmp_anchor}) END ;;
-  }
-
-  dimension: cmp_month_end {
-    hidden: yes
-    type: string
-    sql: CASE WHEN ${cmp_anchor} = LAST_DAY(${cmp_anchor}) THEN ${cmp_anchor}
-              ELSE DATEADD('day', -1, DATE_TRUNC('month', ${cmp_anchor})) END ;;
-  }
-
   dimension: cmp_cur_start {
     hidden: yes
     type: string
-    sql: {% case comparison_mode._parameter_value %}
-           {% when 'dodPrev', 'dodWeek', 'dodAvg' %} ${cmp_anchor}
-           {% when 'wowComplete', 'wowAvg4' %} DATEADD('day', -6, ${cmp_week_end})
-           {% when 'wowWtd' %} DATEADD('day', 1 - DAYOFWEEKISO(${cmp_anchor}), ${cmp_anchor})
-           {% when 'momComplete', 'momAvg3' %} DATE_TRUNC('month', ${cmp_month_end})
-           {% when 'momMtd' %} DATE_TRUNC('month', ${cmp_anchor})
-           {% else %} ${cmp_range_start}
-         {% endcase %} ;;
+    sql: ${cmp_range_start} ;;
   }
 
   dimension: cmp_cur_end {
     hidden: yes
     type: string
-    sql: {% case comparison_mode._parameter_value %}
-           {% when 'wowComplete', 'wowAvg4' %} ${cmp_week_end}
-           {% when 'momComplete', 'momAvg3' %} ${cmp_month_end}
-           {% else %} ${cmp_anchor}
-         {% endcase %} ;;
+    sql: ${cmp_anchor} ;;
   }
 
   dimension: cmp_prior_start {
     hidden: yes
     type: string
-    sql: {% case comparison_mode._parameter_value %}
-           {% when 'py' %}           DATEADD('year', -1, ${cmp_cur_start})
-           {% when 'dodPrev' %}     DATEADD('day', -1, ${cmp_anchor})
-           {% when 'dodWeek' %}     DATEADD('day', -7, ${cmp_anchor})
-           {% when 'dodAvg' %}      ${cmp_range_start}
-           {% when 'wowComplete', 'wowWtd' %} DATEADD('day', -7, ${cmp_cur_start})
-           {% when 'wowAvg4' %}     DATEADD('day', -28, ${cmp_cur_start})
-           {% when 'momComplete', 'momMtd' %} DATEADD('month', -1, ${cmp_cur_start})
-           {% when 'momAvg3' %}     DATEADD('month', -3, ${cmp_cur_start})
-           {% else %} DATEADD('day', -(DATEDIFF('day', ${cmp_cur_start}, ${cmp_cur_end}) + 1), ${cmp_cur_start})
-         {% endcase %} ;;
+    sql: {% if comparison_mode._parameter_value == 'py' %} DATEADD('year', -1, ${cmp_cur_start})
+         {% else %} DATEADD('day', -(DATEDIFF('day', ${cmp_cur_start}, ${cmp_cur_end}) + 1), ${cmp_cur_start})
+         {% endif %} ;;
   }
 
   dimension: cmp_prior_end {
     hidden: yes
     type: string
-    sql: {% case comparison_mode._parameter_value %}
-           {% when 'py' %}           DATEADD('year', -1, ${cmp_cur_end})
-           {% when 'dodPrev' %}     DATEADD('day', -1, ${cmp_anchor})
-           {% when 'dodWeek' %}     DATEADD('day', -7, ${cmp_anchor})
-           {% when 'dodAvg' %}      ${cmp_anchor}
-           {% when 'wowComplete', 'wowWtd' %} DATEADD('day', -7, ${cmp_cur_end})
-           {% when 'momMtd' %}      LEAST(DATEADD('month', -1, ${cmp_anchor}), DATEADD('day', -1, ${cmp_cur_start}))
-           {% else %} DATEADD('day', -1, ${cmp_cur_start})
-         {% endcase %} ;;
+    sql: {% if comparison_mode._parameter_value == 'py' %} DATEADD('year', -1, ${cmp_cur_end})
+         {% else %} DATEADD('day', -1, ${cmp_cur_start})
+         {% endif %} ;;
   }
 
   dimension: cmp_divisor {
     hidden: yes
     type: number
-    sql: {% case comparison_mode._parameter_value %}
-           {% when 'wowAvg4' %} 4
-           {% when 'momAvg3' %} 3
-           {% when 'dodAvg' %}  DATEDIFF('day', ${cmp_range_start}, ${cmp_anchor}) + 1
-           {% else %} 1
-         {% endcase %} ;;
+    sql: 1 ;;
   }
 
   dimension: in_cmp_current {
