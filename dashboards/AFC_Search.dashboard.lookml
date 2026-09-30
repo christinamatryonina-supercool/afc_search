@@ -167,7 +167,7 @@
       display: inline
 
   - name: KPI Comparison
-    title: "Compare to"
+    title: "Compare period with"
     type: field_filter
     default_value: "prev"
     allow_multiple_values: false
@@ -562,21 +562,21 @@
 
   # ------------------------------------------------------------ TAB: Executive
 
-  - name: exec_header
+  - name: nav_exec_logo
     type: text
     title_text: ""
     tab_name: Executive
-    body_text: '<div style="display:flex;align-items:center;gap:14px;height:100%;background:white;overflow:hidden;padding-left:6px;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:64px;width:auto;display:block;" /><div style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:400;color:#5B5B5B;line-height:1;">Executive overview: quick health check</div></div>'
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:100%;background:white;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:110px;width:auto;display:block;" /></div>'
     row: 0
     col: 0
-    width: 24
-    height: 2
+    width: 4
+    height: 3
 
   - name: nav_exec_1
     type: button
     tab_name: Executive
     rich_content_json: '{"text": "Executive overview","description": "Executive overview","href": "","targetTabName": "Executive","newTab": false,"alignment": "left","size": "medium","style": "FILLED","color": "#E31837"}'
-    row: 2
+    row: 3
     col: 0
     width: 4
     height: 1
@@ -585,7 +585,7 @@
     type: button
     tab_name: Executive
     rich_content_json: '{"text": "Conversion","description": "Conversion","href": "","targetTabName": "Conversion","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 3
+    row: 4
     col: 0
     width: 4
     height: 1
@@ -594,7 +594,7 @@
     type: button
     tab_name: Executive
     rich_content_json: '{"text": "Traffic","description": "Traffic","href": "","targetTabName": "Traffic","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 4
+    row: 5
     col: 0
     width: 4
     height: 1
@@ -603,7 +603,7 @@
     type: button
     tab_name: Executive
     rich_content_json: '{"text": "Competition","description": "Competition","href": "","targetTabName": "Competition","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 5
+    row: 6
     col: 0
     width: 4
     height: 1
@@ -612,7 +612,7 @@
     type: button
     tab_name: Executive
     rich_content_json: '{"text": "Operations","description": "Operations","href": "","targetTabName": "Operations","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 6
+    row: 7
     col: 0
     width: 4
     height: 1
@@ -621,7 +621,7 @@
     type: button
     tab_name: Executive
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 7
+    row: 8
     col: 0
     width: 4
     height: 1
@@ -630,8 +630,8 @@
     type: text
     title_text: ""
     tab_name: Executive
-    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Core KPIs</span></div>'
-    row: 2
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Core KPI</span></div>'
+    row: 0
     col: 4
     width: 20
     height: 2
@@ -665,7 +665,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 4
     width: 4
     height: 3
@@ -699,7 +699,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 8
     width: 4
     height: 3
@@ -733,7 +733,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 12
     width: 4
     height: 3
@@ -767,7 +767,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 16
     width: 4
     height: 3
@@ -801,7 +801,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 20
     width: 4
     height: 3
@@ -835,7 +835,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 7
+    row: 5
     col: 4
     width: 4
     height: 3
@@ -869,7 +869,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 7
+    row: 5
     col: 8
     width: 4
     height: 3
@@ -903,7 +903,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 7
+    row: 5
     col: 12
     width: 4
     height: 3
@@ -937,7 +937,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 7
+    row: 5
     col: 16
     width: 4
     height: 3
@@ -971,7 +971,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 7
+    row: 5
     col: 20
     width: 4
     height: 3
@@ -981,7 +981,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Conversions by type</span></div>'
-    row: 10
+    row: 8
     col: 4
     width: 20
     height: 2
@@ -1015,7 +1015,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 12
+    row: 10
     col: 4
     width: 5
     height: 3
@@ -1049,7 +1049,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 12
+    row: 10
     col: 9
     width: 5
     height: 3
@@ -1083,7 +1083,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 12
+    row: 10
     col: 14
     width: 5
     height: 3
@@ -1117,7 +1117,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 12
+    row: 10
     col: 19
     width: 5
     height: 3
@@ -1151,7 +1151,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 15
+    row: 13
     col: 4
     width: 5
     height: 3
@@ -1185,7 +1185,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 15
+    row: 13
     col: 9
     width: 5
     height: 3
@@ -1219,7 +1219,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 15
+    row: 13
     col: 14
     width: 5
     height: 3
@@ -1253,7 +1253,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 15
+    row: 13
     col: 19
     width: 5
     height: 3
@@ -1263,7 +1263,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Coverage</span></div>'
-    row: 18
+    row: 16
     col: 4
     width: 20
     height: 2
@@ -1297,7 +1297,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 20
+    row: 18
     col: 4
     width: 5
     height: 3
@@ -1331,7 +1331,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 20
+    row: 18
     col: 9
     width: 5
     height: 3
@@ -1365,7 +1365,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 20
+    row: 18
     col: 14
     width: 5
     height: 3
@@ -1399,124 +1399,17 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 20
+    row: 18
     col: 19
     width: 5
     height: 3
-
-  - name: exec_band_pacing
-    type: text
-    title_text: ""
-    tab_name: Executive
-    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Budget pacing this month</span></div>'
-    row: 23
-    col: 4
-    width: 20
-    height: 2
-
-  - name: exec_pacing
-    title: "Budget spent this month"
-    tab_name: Executive
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.budget_spent_pct, american_family_care_search_looker_table.pacing_month_elapsed_pct]
-    filters:
-      american_family_care_search_looker_table.date_date: "this month"
-      american_family_care_search_looker_table.is_mapped: "Yes"
-    limit: 1
-    show_view_names: false
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "of month elapsed"
-    listen:
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Device: american_family_care_search_looker_table.device
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-    row: 25
-    col: 4
-    width: 7
-    height: 3
-
-  - name: exec_pacing_status
-    title: "Pacing by region"
-    tab_name: Executive
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: looker_grid
-    fields: [american_family_care_search_looker_table.region_name, american_family_care_search_looker_table.total_budget, american_family_care_search_looker_table.total_cost, american_family_care_search_looker_table.budget_spent_pct, american_family_care_search_looker_table.pacing_projected_spend, american_family_care_search_looker_table.pacing_status]
-    filters:
-      american_family_care_search_looker_table.date_date: "this month"
-      american_family_care_search_looker_table.is_mapped: "Yes"
-    sorts: [american_family_care_search_looker_table.region_name]
-    limit: 500
-    show_view_names: false
-    show_row_numbers: false
-    show_totals: true
-    show_row_totals: false
-    table_theme: white
-    limit_displayed_rows: false
-    enable_conditional_formatting: false
-    header_font_size: 12
-    rows_font_size: 12
-    listen:
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Device: american_family_care_search_looker_table.device
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-    row: 25
-    col: 11
-    width: 13
-    height: 3
-
-  - name: exec_band_compare
-    type: text
-    title_text: ""
-    tab_name: Executive
-    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Period comparisons</span></div>'
-    row: 28
-    col: 4
-    width: 20
-    height: 2
-
-  - name: KPI Comparison
-    type: filter
-    tab_name: Executive
-    row: 30
-    col: 4
-    width: 8
-    height: 1
-    ui_config:
-      type: dropdown_menu
-      display: overflow
-
-  - name: exec_compare_note
-    type: text
-    title_text: ""
-    tab_name: Executive
-    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Sets what every KPI tile (vs PP) and comparison table on the dashboard is compared with.</div>'
-    row: 30
-    col: 12
-    width: 12
-    height: 1
 
   - name: exec_band_dod
     type: text
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Day over day</span></div>'
-    row: 31
+    row: 21
     col: 4
     width: 20
     height: 2
@@ -1524,8 +1417,19 @@
   - name: DoD Delta Format
     type: filter
     tab_name: Executive
-    row: 33
+    row: 23
     col: 4
+    width: 6
+    height: 1
+    ui_config:
+      type: dropdown_menu
+      display: overflow
+
+  - name: KPI Comparison
+    type: filter
+    tab_name: Executive
+    row: 23
+    col: 10
     width: 6
     height: 1
     ui_config:
@@ -1536,10 +1440,10 @@
     type: text
     title_text: ""
     tab_name: Executive
-    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a day with the day before it. Green is better, red is worse.</div>'
-    row: 33
-    col: 10
-    width: 14
+    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a day with the day before it. Compare to sets the vs PP of every KPI tile.</div>'
+    row: 23
+    col: 16
+    width: 8
     height: 1
 
   - name: exec_dod_table
@@ -1571,7 +1475,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       DoD Delta Format: american_family_care_search_looker_table.delta_format
-    row: 34
+    row: 24
     col: 4
     width: 20
     height: 12
@@ -1581,7 +1485,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Week over week</span></div>'
-    row: 46
+    row: 36
     col: 4
     width: 20
     height: 2
@@ -1589,7 +1493,7 @@
   - name: WoW Delta Format
     type: filter
     tab_name: Executive
-    row: 48
+    row: 38
     col: 4
     width: 6
     height: 1
@@ -1602,7 +1506,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a week with the week before it. Weeks run Monday to Sunday. Green is better, red is worse.</div>'
-    row: 48
+    row: 38
     col: 10
     width: 14
     height: 1
@@ -1637,7 +1541,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       WoW Delta Format: american_family_care_search_looker_table.delta_format
-    row: 49
+    row: 39
     col: 4
     width: 20
     height: 9
@@ -1647,7 +1551,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Month over month</span></div>'
-    row: 58
+    row: 48
     col: 4
     width: 20
     height: 2
@@ -1655,7 +1559,7 @@
   - name: MoM Delta Format
     type: filter
     tab_name: Executive
-    row: 60
+    row: 50
     col: 4
     width: 6
     height: 1
@@ -1668,7 +1572,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a month with the month before it. Green is better, red is worse.</div>'
-    row: 60
+    row: 50
     col: 10
     width: 14
     height: 1
@@ -1703,28 +1607,28 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       MoM Delta Format: american_family_care_search_looker_table.delta_format
-    row: 61
+    row: 51
     col: 4
     width: 20
     height: 9
 
   # ----------------------------------------------------------- TAB: Conversion
 
-  - name: conv_header
+  - name: nav_conv_logo
     type: text
     title_text: ""
     tab_name: Conversion
-    body_text: '<div style="display:flex;align-items:center;gap:14px;height:100%;background:white;overflow:hidden;padding-left:6px;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:64px;width:auto;display:block;" /><div style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:400;color:#5B5B5B;line-height:1;">Conversion: what the spend is producing</div></div>'
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:100%;background:white;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:110px;width:auto;display:block;" /></div>'
     row: 0
     col: 0
-    width: 24
-    height: 2
+    width: 4
+    height: 3
 
   - name: nav_conv_1
     type: button
     tab_name: Conversion
     rich_content_json: '{"text": "Executive overview","description": "Executive overview","href": "","targetTabName": "Executive","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 2
+    row: 3
     col: 0
     width: 4
     height: 1
@@ -1733,7 +1637,7 @@
     type: button
     tab_name: Conversion
     rich_content_json: '{"text": "Conversion","description": "Conversion","href": "","targetTabName": "Conversion","newTab": false,"alignment": "left","size": "medium","style": "FILLED","color": "#E31837"}'
-    row: 3
+    row: 4
     col: 0
     width: 4
     height: 1
@@ -1742,7 +1646,7 @@
     type: button
     tab_name: Conversion
     rich_content_json: '{"text": "Traffic","description": "Traffic","href": "","targetTabName": "Traffic","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 4
+    row: 5
     col: 0
     width: 4
     height: 1
@@ -1751,7 +1655,7 @@
     type: button
     tab_name: Conversion
     rich_content_json: '{"text": "Competition","description": "Competition","href": "","targetTabName": "Competition","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 5
+    row: 6
     col: 0
     width: 4
     height: 1
@@ -1760,7 +1664,7 @@
     type: button
     tab_name: Conversion
     rich_content_json: '{"text": "Operations","description": "Operations","href": "","targetTabName": "Operations","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 6
+    row: 7
     col: 0
     width: 4
     height: 1
@@ -1769,7 +1673,7 @@
     type: button
     tab_name: Conversion
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 7
+    row: 8
     col: 0
     width: 4
     height: 1
@@ -1779,7 +1683,7 @@
     title_text: ""
     tab_name: Conversion
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Pursued conversions</span></div>'
-    row: 2
+    row: 0
     col: 4
     width: 20
     height: 2
@@ -1813,7 +1717,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 4
     width: 4
     height: 3
@@ -1847,7 +1751,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 8
     width: 4
     height: 3
@@ -1881,7 +1785,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 12
     width: 4
     height: 3
@@ -1915,7 +1819,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 16
     width: 4
     height: 3
@@ -1949,7 +1853,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 20
     width: 4
     height: 3
@@ -1959,7 +1863,7 @@
     title_text: ""
     tab_name: Conversion
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Conversions by type</span></div>'
-    row: 7
+    row: 5
     col: 4
     width: 20
     height: 2
@@ -1993,7 +1897,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 9
+    row: 7
     col: 4
     width: 5
     height: 3
@@ -2027,7 +1931,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 9
+    row: 7
     col: 9
     width: 5
     height: 3
@@ -2061,7 +1965,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 9
+    row: 7
     col: 14
     width: 5
     height: 3
@@ -2095,7 +1999,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 9
+    row: 7
     col: 19
     width: 5
     height: 3
@@ -2129,7 +2033,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 12
+    row: 10
     col: 4
     width: 5
     height: 3
@@ -2163,7 +2067,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 12
+    row: 10
     col: 9
     width: 5
     height: 3
@@ -2197,7 +2101,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 12
+    row: 10
     col: 14
     width: 5
     height: 3
@@ -2231,7 +2135,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 12
+    row: 10
     col: 19
     width: 5
     height: 3
@@ -2239,7 +2143,7 @@
   - name: Conv Granularity
     type: filter
     tab_name: Conversion
-    row: 15
+    row: 13
     col: 4
     width: 6
     height: 1
@@ -2250,7 +2154,7 @@
   - name: Conv Bars
     type: filter
     tab_name: Conversion
-    row: 15
+    row: 13
     col: 10
     width: 7
     height: 1
@@ -2261,7 +2165,7 @@
   - name: Conv Line
     type: filter
     tab_name: Conversion
-    row: 15
+    row: 13
     col: 17
     width: 7
     height: 1
@@ -2307,7 +2211,7 @@
       Conv Granularity: american_family_care_search_looker_table.date_granularity
       Conv Bars: american_family_care_search_looker_table.metric_selector_1
       Conv Line: american_family_care_search_looker_table.metric_selector_2
-    row: 16
+    row: 14
     col: 4
     width: 20
     height: 8
@@ -2315,7 +2219,7 @@
   - name: Conv Stack Metric
     type: filter
     tab_name: Conversion
-    row: 24
+    row: 22
     col: 4
     width: 6
     height: 1
@@ -2326,7 +2230,7 @@
   - name: Conv Stack Rows
     type: filter
     tab_name: Conversion
-    row: 24
+    row: 22
     col: 10
     width: 7
     height: 1
@@ -2337,7 +2241,7 @@
   - name: Conv Stack Color
     type: filter
     tab_name: Conversion
-    row: 24
+    row: 22
     col: 17
     width: 7
     height: 1
@@ -2375,7 +2279,7 @@
       Conv Stack Metric: american_family_care_search_looker_table.metric_selector_1
       Conv Stack Rows: american_family_care_search_looker_table.dimension_selector_1
       Conv Stack Color: american_family_care_search_looker_table.dimension_selector_2
-    row: 25
+    row: 23
     col: 4
     width: 20
     height: 8
@@ -2383,7 +2287,7 @@
   - name: Conv Breakdown Rows
     type: filter
     tab_name: Conversion
-    row: 33
+    row: 31
     col: 4
     width: 5
     height: 1
@@ -2394,7 +2298,7 @@
   - name: Conv Breakdown Metric
     type: filter
     tab_name: Conversion
-    row: 33
+    row: 31
     col: 9
     width: 5
     height: 1
@@ -2405,7 +2309,7 @@
   - name: Conv Over Time By
     type: filter
     tab_name: Conversion
-    row: 33
+    row: 31
     col: 14
     width: 5
     height: 1
@@ -2416,7 +2320,7 @@
   - name: Conv Over Time Metric
     type: filter
     tab_name: Conversion
-    row: 33
+    row: 31
     col: 19
     width: 5
     height: 1
@@ -2456,7 +2360,7 @@
       Conv Breakdown Rows: american_family_care_search_looker_table.dimension_selector_1
       Conv Breakdown Metric: american_family_care_search_looker_table.metric_selector_1
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 34
+    row: 32
     col: 4
     width: 10
     height: 9
@@ -2491,7 +2395,7 @@
       Conv Granularity: american_family_care_search_looker_table.date_granularity
       Conv Over Time By: american_family_care_search_looker_table.dimension_selector_2
       Conv Over Time Metric: american_family_care_search_looker_table.metric_selector_2
-    row: 34
+    row: 32
     col: 14
     width: 10
     height: 9
@@ -2499,7 +2403,7 @@
   - name: Conv Table By
     type: filter
     tab_name: Conversion
-    row: 43
+    row: 41
     col: 4
     width: 8
     height: 1
@@ -2541,28 +2445,28 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Conv Table By: american_family_care_search_looker_table.dimension_selector_1
-    row: 44
+    row: 42
     col: 4
     width: 20
     height: 9
 
   # -------------------------------------------------------------- TAB: Traffic
 
-  - name: traf_header
+  - name: nav_traf_logo
     type: text
     title_text: ""
     tab_name: Traffic
-    body_text: '<div style="display:flex;align-items:center;gap:14px;height:100%;background:white;overflow:hidden;padding-left:6px;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:64px;width:auto;display:block;" /><div style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:400;color:#5B5B5B;line-height:1;">Traffic: reach and clicks</div></div>'
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:100%;background:white;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:110px;width:auto;display:block;" /></div>'
     row: 0
     col: 0
-    width: 24
-    height: 2
+    width: 4
+    height: 3
 
   - name: nav_traf_1
     type: button
     tab_name: Traffic
     rich_content_json: '{"text": "Executive overview","description": "Executive overview","href": "","targetTabName": "Executive","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 2
+    row: 3
     col: 0
     width: 4
     height: 1
@@ -2571,7 +2475,7 @@
     type: button
     tab_name: Traffic
     rich_content_json: '{"text": "Conversion","description": "Conversion","href": "","targetTabName": "Conversion","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 3
+    row: 4
     col: 0
     width: 4
     height: 1
@@ -2580,7 +2484,7 @@
     type: button
     tab_name: Traffic
     rich_content_json: '{"text": "Traffic","description": "Traffic","href": "","targetTabName": "Traffic","newTab": false,"alignment": "left","size": "medium","style": "FILLED","color": "#E31837"}'
-    row: 4
+    row: 5
     col: 0
     width: 4
     height: 1
@@ -2589,7 +2493,7 @@
     type: button
     tab_name: Traffic
     rich_content_json: '{"text": "Competition","description": "Competition","href": "","targetTabName": "Competition","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 5
+    row: 6
     col: 0
     width: 4
     height: 1
@@ -2598,7 +2502,7 @@
     type: button
     tab_name: Traffic
     rich_content_json: '{"text": "Operations","description": "Operations","href": "","targetTabName": "Operations","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 6
+    row: 7
     col: 0
     width: 4
     height: 1
@@ -2607,7 +2511,7 @@
     type: button
     tab_name: Traffic
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 7
+    row: 8
     col: 0
     width: 4
     height: 1
@@ -2617,7 +2521,7 @@
     title_text: ""
     tab_name: Traffic
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Traffic</span></div>'
-    row: 2
+    row: 0
     col: 4
     width: 20
     height: 2
@@ -2651,7 +2555,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 4
     width: 4
     height: 3
@@ -2685,7 +2589,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 8
     width: 4
     height: 3
@@ -2719,7 +2623,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 12
     width: 4
     height: 3
@@ -2753,7 +2657,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 16
     width: 4
     height: 3
@@ -2787,7 +2691,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 20
     width: 4
     height: 3
@@ -2797,7 +2701,7 @@
     title_text: ""
     tab_name: Traffic
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Video</span></div>'
-    row: 7
+    row: 5
     col: 4
     width: 20
     height: 2
@@ -2831,7 +2735,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 9
+    row: 7
     col: 4
     width: 5
     height: 3
@@ -2865,7 +2769,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 9
+    row: 7
     col: 9
     width: 5
     height: 3
@@ -2899,7 +2803,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 9
+    row: 7
     col: 14
     width: 5
     height: 3
@@ -2933,7 +2837,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 9
+    row: 7
     col: 19
     width: 5
     height: 3
@@ -2941,7 +2845,7 @@
   - name: Traffic Granularity
     type: filter
     tab_name: Traffic
-    row: 12
+    row: 10
     col: 4
     width: 6
     height: 1
@@ -2952,7 +2856,7 @@
   - name: Traffic Bars
     type: filter
     tab_name: Traffic
-    row: 12
+    row: 10
     col: 10
     width: 7
     height: 1
@@ -2963,7 +2867,7 @@
   - name: Traffic Line
     type: filter
     tab_name: Traffic
-    row: 12
+    row: 10
     col: 17
     width: 7
     height: 1
@@ -3009,7 +2913,7 @@
       Traffic Granularity: american_family_care_search_looker_table.date_granularity
       Traffic Bars: american_family_care_search_looker_table.metric_selector_1
       Traffic Line: american_family_care_search_looker_table.metric_selector_2
-    row: 13
+    row: 11
     col: 4
     width: 20
     height: 8
@@ -3017,7 +2921,7 @@
   - name: Traffic Breakdown Rows
     type: filter
     tab_name: Traffic
-    row: 21
+    row: 19
     col: 4
     width: 5
     height: 1
@@ -3028,7 +2932,7 @@
   - name: Traffic Breakdown Metric
     type: filter
     tab_name: Traffic
-    row: 21
+    row: 19
     col: 9
     width: 5
     height: 1
@@ -3039,7 +2943,7 @@
   - name: Top Campaigns By
     type: filter
     tab_name: Traffic
-    row: 21
+    row: 19
     col: 14
     width: 10
     height: 1
@@ -3080,7 +2984,7 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Traffic Breakdown Rows: american_family_care_search_looker_table.dimension_selector_1
       Traffic Breakdown Metric: american_family_care_search_looker_table.metric_selector_1
-    row: 22
+    row: 20
     col: 4
     width: 10
     height: 9
@@ -3112,28 +3016,28 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Top Campaigns By: american_family_care_search_looker_table.metric_selector_2
-    row: 22
+    row: 20
     col: 14
     width: 10
     height: 9
 
   # ---------------------------------------------------------- TAB: Competition
 
-  - name: comp_header
+  - name: nav_comp_logo
     type: text
     title_text: ""
     tab_name: Competition
-    body_text: '<div style="display:flex;align-items:center;gap:14px;height:100%;background:white;overflow:hidden;padding-left:6px;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:64px;width:auto;display:block;" /><div style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:400;color:#5B5B5B;line-height:1;">Competition: share of the auction</div></div>'
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:100%;background:white;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:110px;width:auto;display:block;" /></div>'
     row: 0
     col: 0
-    width: 24
-    height: 2
+    width: 4
+    height: 3
 
   - name: nav_comp_1
     type: button
     tab_name: Competition
     rich_content_json: '{"text": "Executive overview","description": "Executive overview","href": "","targetTabName": "Executive","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 2
+    row: 3
     col: 0
     width: 4
     height: 1
@@ -3142,7 +3046,7 @@
     type: button
     tab_name: Competition
     rich_content_json: '{"text": "Conversion","description": "Conversion","href": "","targetTabName": "Conversion","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 3
+    row: 4
     col: 0
     width: 4
     height: 1
@@ -3151,7 +3055,7 @@
     type: button
     tab_name: Competition
     rich_content_json: '{"text": "Traffic","description": "Traffic","href": "","targetTabName": "Traffic","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 4
+    row: 5
     col: 0
     width: 4
     height: 1
@@ -3160,7 +3064,7 @@
     type: button
     tab_name: Competition
     rich_content_json: '{"text": "Competition","description": "Competition","href": "","targetTabName": "Competition","newTab": false,"alignment": "left","size": "medium","style": "FILLED","color": "#E31837"}'
-    row: 5
+    row: 6
     col: 0
     width: 4
     height: 1
@@ -3169,7 +3073,7 @@
     type: button
     tab_name: Competition
     rich_content_json: '{"text": "Operations","description": "Operations","href": "","targetTabName": "Operations","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 6
+    row: 7
     col: 0
     width: 4
     height: 1
@@ -3178,7 +3082,7 @@
     type: button
     tab_name: Competition
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 7
+    row: 8
     col: 0
     width: 4
     height: 1
@@ -3188,7 +3092,7 @@
     title_text: ""
     tab_name: Competition
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Coverage</span></div>'
-    row: 2
+    row: 0
     col: 4
     width: 20
     height: 2
@@ -3222,7 +3126,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 4
     width: 4
     height: 3
@@ -3256,7 +3160,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 8
     width: 4
     height: 3
@@ -3290,7 +3194,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 12
     width: 4
     height: 3
@@ -3324,7 +3228,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 16
     width: 4
     height: 3
@@ -3358,7 +3262,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 4
+    row: 2
     col: 20
     width: 4
     height: 3
@@ -3366,7 +3270,7 @@
   - name: Comp Granularity
     type: filter
     tab_name: Competition
-    row: 7
+    row: 5
     col: 4
     width: 6
     height: 1
@@ -3407,7 +3311,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Comp Granularity: american_family_care_search_looker_table.date_granularity
-    row: 8
+    row: 6
     col: 4
     width: 20
     height: 8
@@ -3443,7 +3347,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 16
+    row: 14
     col: 4
     width: 20
     height: 5
@@ -3451,7 +3355,7 @@
   - name: Comp Campaign
     type: filter
     tab_name: Competition
-    row: 21
+    row: 19
     col: 4
     width: 8
     height: 1
@@ -3493,28 +3397,28 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Comp Campaign: american_family_care_search_looker_table.campaign
-    row: 22
+    row: 20
     col: 4
     width: 20
     height: 10
 
   # ----------------------------------------------------------- TAB: Operations
 
-  - name: ops_header
+  - name: nav_ops_logo
     type: text
     title_text: ""
     tab_name: Operations
-    body_text: '<div style="display:flex;align-items:center;gap:14px;height:100%;background:white;overflow:hidden;padding-left:6px;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:64px;width:auto;display:block;" /><div style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:400;color:#5B5B5B;line-height:1;">Operations: budget, cost and campaigns</div></div>'
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:100%;background:white;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:110px;width:auto;display:block;" /></div>'
     row: 0
     col: 0
-    width: 24
-    height: 2
+    width: 4
+    height: 3
 
   - name: nav_ops_1
     type: button
     tab_name: Operations
     rich_content_json: '{"text": "Executive overview","description": "Executive overview","href": "","targetTabName": "Executive","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 2
+    row: 3
     col: 0
     width: 4
     height: 1
@@ -3523,7 +3427,7 @@
     type: button
     tab_name: Operations
     rich_content_json: '{"text": "Conversion","description": "Conversion","href": "","targetTabName": "Conversion","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 3
+    row: 4
     col: 0
     width: 4
     height: 1
@@ -3532,7 +3436,7 @@
     type: button
     tab_name: Operations
     rich_content_json: '{"text": "Traffic","description": "Traffic","href": "","targetTabName": "Traffic","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 4
+    row: 5
     col: 0
     width: 4
     height: 1
@@ -3541,7 +3445,7 @@
     type: button
     tab_name: Operations
     rich_content_json: '{"text": "Competition","description": "Competition","href": "","targetTabName": "Competition","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 5
+    row: 6
     col: 0
     width: 4
     height: 1
@@ -3550,7 +3454,7 @@
     type: button
     tab_name: Operations
     rich_content_json: '{"text": "Operations","description": "Operations","href": "","targetTabName": "Operations","newTab": false,"alignment": "left","size": "medium","style": "FILLED","color": "#E31837"}'
-    row: 6
+    row: 7
     col: 0
     width: 4
     height: 1
@@ -3559,7 +3463,7 @@
     type: button
     tab_name: Operations
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 7
+    row: 8
     col: 0
     width: 4
     height: 1
@@ -3569,7 +3473,7 @@
     title_text: ""
     tab_name: Operations
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Budget pacing</span></div>'
-    row: 2
+    row: 0
     col: 4
     width: 20
     height: 2
@@ -3577,7 +3481,7 @@
   - name: Budget Month
     type: filter
     tab_name: Operations
-    row: 4
+    row: 2
     col: 4
     width: 8
     height: 1
@@ -3618,7 +3522,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Budget Month: american_family_care_search_looker_table.date_month
-    row: 5
+    row: 3
     col: 4
     width: 20
     height: 4
@@ -3668,7 +3572,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Budget Month: american_family_care_search_looker_table.date_month
-    row: 9
+    row: 7
     col: 4
     width: 10
     height: 8
@@ -3702,7 +3606,7 @@
       Channel: american_family_care_search_looker_table.channel
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
-    row: 9
+    row: 7
     col: 14
     width: 10
     height: 8
@@ -3712,7 +3616,7 @@
     title_text: ""
     tab_name: Operations
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Cost breakdown</span></div>'
-    row: 17
+    row: 15
     col: 4
     width: 20
     height: 2
@@ -3720,7 +3624,7 @@
   - name: Spend Breakdown By
     type: filter
     tab_name: Operations
-    row: 19
+    row: 17
     col: 4
     width: 8
     height: 1
@@ -3755,7 +3659,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Spend Breakdown By: american_family_care_search_looker_table.dimension_selector_1
-    row: 20
+    row: 18
     col: 4
     width: 10
     height: 9
@@ -3789,7 +3693,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Spend Breakdown By: american_family_care_search_looker_table.dimension_selector_1
-    row: 20
+    row: 18
     col: 14
     width: 10
     height: 9
@@ -3799,7 +3703,7 @@
     title_text: ""
     tab_name: Operations
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Market view (inferred from campaign names)</span></div>'
-    row: 29
+    row: 27
     col: 4
     width: 20
     height: 2
@@ -3838,7 +3742,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 31
+    row: 29
     col: 4
     width: 20
     height: 7
@@ -3848,7 +3752,7 @@
     title_text: ""
     tab_name: Operations
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Search metrics vs cost</span></div>'
-    row: 38
+    row: 36
     col: 4
     width: 20
     height: 2
@@ -3856,7 +3760,7 @@
   - name: Ops Granularity
     type: filter
     tab_name: Operations
-    row: 40
+    row: 38
     col: 4
     width: 6
     height: 1
@@ -3867,7 +3771,7 @@
   - name: Search Metric
     type: filter
     tab_name: Operations
-    row: 40
+    row: 38
     col: 10
     width: 8
     height: 1
@@ -3909,7 +3813,7 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Ops Granularity: american_family_care_search_looker_table.date_granularity
       Search Metric: american_family_care_search_looker_table.metric_selector_1
-    row: 41
+    row: 39
     col: 4
     width: 10
     height: 8
@@ -3947,7 +3851,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Ops Granularity: american_family_care_search_looker_table.date_granularity
-    row: 41
+    row: 39
     col: 14
     width: 10
     height: 8
@@ -3982,7 +3886,7 @@
       Channel: american_family_care_search_looker_table.channel
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
-    row: 49
+    row: 47
     col: 4
     width: 10
     height: 8
@@ -4015,7 +3919,7 @@
       Channel: american_family_care_search_looker_table.channel
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
-    row: 49
+    row: 47
     col: 14
     width: 10
     height: 8
@@ -4025,7 +3929,7 @@
     title_text: ""
     tab_name: Operations
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Detailed performance</span></div>'
-    row: 57
+    row: 55
     col: 4
     width: 20
     height: 2
@@ -4033,7 +3937,7 @@
   - name: Ops Campaign
     type: filter
     tab_name: Operations
-    row: 59
+    row: 57
     col: 4
     width: 8
     height: 1
@@ -4077,28 +3981,28 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Ops Campaign: american_family_care_search_looker_table.campaign
-    row: 60
+    row: 58
     col: 4
     width: 20
     height: 12
 
   # ----------------------------------------------------------- TAB: Dictionary
 
-  - name: dict_header
+  - name: nav_dict_logo
     type: text
     title_text: ""
     tab_name: Dictionary
-    body_text: '<div style="display:flex;align-items:center;gap:14px;height:100%;background:white;overflow:hidden;padding-left:6px;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:64px;width:auto;display:block;" /><div style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:400;color:#5B5B5B;line-height:1;">Data dictionary and useful links</div></div>'
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:100%;background:white;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:110px;width:auto;display:block;" /></div>'
     row: 0
     col: 0
-    width: 24
-    height: 2
+    width: 4
+    height: 3
 
   - name: nav_dict_1
     type: button
     tab_name: Dictionary
     rich_content_json: '{"text": "Executive overview","description": "Executive overview","href": "","targetTabName": "Executive","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 2
+    row: 3
     col: 0
     width: 4
     height: 1
@@ -4107,7 +4011,7 @@
     type: button
     tab_name: Dictionary
     rich_content_json: '{"text": "Conversion","description": "Conversion","href": "","targetTabName": "Conversion","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 3
+    row: 4
     col: 0
     width: 4
     height: 1
@@ -4116,7 +4020,7 @@
     type: button
     tab_name: Dictionary
     rich_content_json: '{"text": "Traffic","description": "Traffic","href": "","targetTabName": "Traffic","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 4
+    row: 5
     col: 0
     width: 4
     height: 1
@@ -4125,7 +4029,7 @@
     type: button
     tab_name: Dictionary
     rich_content_json: '{"text": "Competition","description": "Competition","href": "","targetTabName": "Competition","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 5
+    row: 6
     col: 0
     width: 4
     height: 1
@@ -4134,7 +4038,7 @@
     type: button
     tab_name: Dictionary
     rich_content_json: '{"text": "Operations","description": "Operations","href": "","targetTabName": "Operations","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 6
+    row: 7
     col: 0
     width: 4
     height: 1
@@ -4143,7 +4047,7 @@
     type: button
     tab_name: Dictionary
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "FILLED","color": "#E31837"}'
-    row: 7
+    row: 8
     col: 0
     width: 4
     height: 1
@@ -4153,7 +4057,7 @@
     title_text: ""
     tab_name: Dictionary
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Useful links</div><div style="display:flex;flex-wrap:wrap;"><div style="flex:1 1 22%;min-width:210px;"><a href="https://docs.google.com/spreadsheets/d/1YUQQNuK-qr_9zZQ7fh5HygV6-IFRv_lTCelmY3FLxA4/edit?gid=0#gid=0" target="_blank" style="display:block;text-decoration:none;color:#262D33;border:1px solid #E4E6E9;border-radius:10px;padding:12px 14px;margin:6px;background:#FFFFFF;"><b>Auto-Pacing sheet</b><br><span style="font-size:12px;color:#5F6368;">The legacy Google Sheet this dashboard replaces. The mapping and budget tabs live here too.</span><br><span style="font-size:12px;color:#E31837;font-weight:600;">Open in Google Sheets</span></a></div><div style="flex:1 1 22%;min-width:210px;"><a href="https://docs.google.com/spreadsheets/d/1YUQQNuK-qr_9zZQ7fh5HygV6-IFRv_lTCelmY3FLxA4/edit?gid=0#gid=0" target="_blank" style="display:block;text-decoration:none;color:#262D33;border:1px solid #E4E6E9;border-radius:10px;padding:12px 14px;margin:6px;background:#FFFFFF;"><b>Campaign mapping</b><br><span style="font-size:12px;color:#5F6368;">Mapping tab: campaign name to Region, Account group, Mapping channel, Condition, Budget group (AFC_MatchTable).</span><br><span style="font-size:12px;color:#E31837;font-weight:600;">Open the mapping tab</span></a></div><div style="flex:1 1 22%;min-width:210px;"><a href="https://docs.google.com/spreadsheets/d/1YUQQNuK-qr_9zZQ7fh5HygV6-IFRv_lTCelmY3FLxA4/edit?gid=0#gid=0" target="_blank" style="display:block;text-decoration:none;color:#262D33;border:1px solid #E4E6E9;border-radius:10px;padding:12px 14px;margin:6px;background:#FFFFFF;"><b>Budget mapping</b><br><span style="font-size:12px;color:#5F6368;">DEPT Budget Mapping tab: monthly budget for Southeast and Northeast (AFC_Budget_MatchTable).</span><br><span style="font-size:12px;color:#E31837;font-weight:600;">Open the budget tab</span></a></div><div style="flex:1 1 22%;min-width:210px;"><a href="https://docs.google.com/document/d/1IApCUY_7WbSMgosNQ4FDf3_-WukuZvzpT5kkj3u-x5c/edit?tab=t.0" target="_blank" style="display:block;text-decoration:none;color:#262D33;border:1px solid #E4E6E9;border-radius:10px;padding:12px 14px;margin:6px;background:#FFFFFF;"><b>Data dictionary</b><br><span style="font-size:12px;color:#5F6368;">Field-by-field reference: sources, calculation logic and legacy comparisons.</span><br><span style="font-size:12px;color:#E31837;font-weight:600;">Open in Google Docs</span></a></div></div><div style="font-size:12px;color:#5F6368;text-align:center;margin-top:4px;">Project ticket: TECH-63214 in Jira</div></div>'
-    row: 2
+    row: 0
     col: 4
     width: 20
     height: 4
@@ -4163,7 +4067,7 @@
     title_text: ""
     tab_name: Dictionary
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:13px;color:#3c4043;padding:6px 10px;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Mapping and budget updates</div>Mapping and budget sheets are ingested automatically on the 1st and 15th of each month. Add or remove rows between runs. Do not rename, reorder, add or remove columns: the ingestion reads a fixed structure. New campaigns show as <b>Unmapped</b> until they are added to the mapping sheet. Budget is set per Region and Month, and budget rows exist on their own so future months appear as soon as the sheet has them.</div>'
-    row: 6
+    row: 4
     col: 4
     width: 20
     height: 3
@@ -4173,7 +4077,7 @@
     title_text: ""
     tab_name: Dictionary
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:13px;color:#262D33;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Field reference</div><table style="border-collapse:collapse;width:100%;"><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Dimensions</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Date, Day, Week, Month, Year</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Calendar date of the activity. Weeks run Monday to Sunday.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Region</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">NE or SE from the mapping sheet. Budget is matched on it.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Account</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google Ads account. Two roll-up accounts today.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Channel</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Platform channel: Google campaign type (Search, Performance Max).</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Mapping channel</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Brand, NonBrand or PMax from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Condition, Budget group, Account group</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">AFC campaign groupings from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Market (inferred)</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Read from the metro code or clinic town in the campaign name.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Conversion type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Filter for Conversions, CPA, CVR, Revenue and ROAS only. Spend and traffic never change with it.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Measures</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Spend, Impressions, Clicks</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">From Google Ads. Spend in dollars.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Appointments, Calls, Clinic leads</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">One measure per pursued conversion type. Fixed, not moved by the Conversion type filter.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Conversions</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Sum of the types picked in the Conversion type filter. Default: appointments, calls, clinic leads.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Revenue</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google conversion value for the types in the Conversion type filter.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Budget</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Monthly planned spend per Region from the budget sheet.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Calculated, always from period totals</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">CTR, CPC, CPM</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Clicks / Impressions, Spend / Clicks, Spend / Impressions x 1,000.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">CPA, CVR, ROAS</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / Conversions, Conversions / Clicks, Revenue / Spend.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Cost per appointment, call, lead</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / that conversion type.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Search impression share</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Impressions / Eligible impressions. Lost IS (rank, budget) and Click share work the same way.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">VTR, Video completion rate</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Video views / Impressions and Video completions / Video views.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Budget spent, projected</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend to date / Budget. Projected = spend to date / days elapsed x days in month.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Deltas</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">% change or absolute change (points for rates). Green is better, red is worse. For CPC and CPA lower is better.</td></tr></table></div>'
-    row: 9
+    row: 7
     col: 4
     width: 20
     height: 12
@@ -4183,7 +4087,7 @@
     title_text: ""
     tab_name: Dictionary
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:13px;color:#262D33;padding:0 10px;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Decisions we need from AFC</div><ol style="padding-left:18px;margin:0;"><li style="margin:0 0 8px;"><b>Confirm the pursued conversions</b><br><span style="color:#5F6368;">Appointments, calls and clinic leads each have their own measure and cost per conversion. Directions and other local actions are left out by default.</span></li><li style="margin:0 0 8px;"><b>Which accounts are in scope?</b><br><span style="color:#5F6368;">Two roll-up accounts are connected. 158 clinic accounts exist in the manager account.</span></li><li style="margin:0 0 8px;"><b>Are conversion values real revenue?</b><br><span style="color:#5F6368;">If they are default values, ROAS is labelled indicative or hidden.</span></li><li style="margin:0 0 8px;"><b>Market view</b><br><span style="color:#5F6368;">A clinic-to-DMA list, or confirmation of the markets inferred from campaign names.</span></li><li style="margin:0 0 8px;"><b>Budget detail</b><br><span style="color:#5F6368;">Budgets by condition, account or week need to be added to the sheet in the same format.</span></li><li style="margin:0 0 8px;"><b>Mapping ownership</b><br><span style="color:#5F6368;">Who at AFC adds new campaigns to the mapping sheet when they launch?</span></li></ol></div>'
-    row: 21
+    row: 19
     col: 4
     width: 20
     height: 6
