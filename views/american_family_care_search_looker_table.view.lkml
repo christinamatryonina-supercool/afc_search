@@ -163,6 +163,20 @@ view: american_family_care_search_looker_table {
     drill_fields: [account, condition, budget_group, campaign]
   }
 
+  dimension: account_rollup {
+    group_label: "Account"
+    label: "Account rollup"
+    description: "AFC's three aggregate looks: Corporate NE, Corporate SE and Corp-managed Ad.Works. Ad.Works account IDs still to be added once confirmed and connected."
+    type: string
+    sql: CASE REPLACE(${TABLE}."Account_ID"::VARCHAR, '-', '')
+           WHEN '2771464674' THEN 'Corporate NE'
+           WHEN '8138284230' THEN 'Corporate SE'
+           -- WHEN '<Ad.Works account id>' THEN 'Ad.Works'   -- add when the Ad.Works accounts are connected
+           ELSE 'Other'
+         END ;;
+    drill_fields: [account, region, campaign]
+  }
+
   dimension: account_group { type: string sql: ${TABLE}."Account Group" ;;
     group_label: "Mapping"
     label: "Account group"
@@ -171,8 +185,8 @@ view: american_family_care_search_looker_table {
 
   dimension: mapping_channel { type: string sql: ${TABLE}."Mapping_Channel" ;;
     group_label: "Mapping"
-    label: "Mapping Channel"
-    description: "Brand, NonBrand or PMax. AFC's own grouping from the mapping sheet."
+    label: "Keyword type"
+    description: "Brand, NonBrand or PMax. AFC's own grouping from the mapping sheet (Mapping_Channel)."
     drill_fields: [condition, campaign]
   }
 
@@ -220,8 +234,8 @@ view: american_family_care_search_looker_table {
 
   dimension: channel { type: string sql: ${TABLE}."Channel" ;;
     group_label: "Campaign"
-    label: "Channel"
-    description: "Platform channel: Google's campaign type (Search, Performance Max, App)."
+    label: "Campaign type"
+    description: "Google's campaign type (Search, Performance Max, App)."
     drill_fields: [mapping_channel, campaign]
   }
 
@@ -400,9 +414,10 @@ view: american_family_care_search_looker_table {
     default_value: "condition"
     allowed_value: { label: "Region" value: "regionName" }
     allowed_value: { label: "Account" value: "account" }
+    allowed_value: { label: "Account rollup" value: "accountRollup" }
     allowed_value: { label: "Account group" value: "accountGroup" }
-    allowed_value: { label: "Channel" value: "channel" }
-    allowed_value: { label: "Mapping Channel" value: "mappingChannel" }
+    allowed_value: { label: "Campaign type" value: "channel" }
+    allowed_value: { label: "Keyword type" value: "mappingChannel" }
     allowed_value: { label: "Condition" value: "condition" }
     allowed_value: { label: "Budget group" value: "budgetGroup" }
     allowed_value: { label: "Campaign" value: "campaign" }
@@ -420,9 +435,10 @@ view: american_family_care_search_looker_table {
     default_value: "mappingChannel"
     allowed_value: { label: "Region" value: "regionName" }
     allowed_value: { label: "Account" value: "account" }
+    allowed_value: { label: "Account rollup" value: "accountRollup" }
     allowed_value: { label: "Account group" value: "accountGroup" }
-    allowed_value: { label: "Channel" value: "channel" }
-    allowed_value: { label: "Mapping Channel" value: "mappingChannel" }
+    allowed_value: { label: "Campaign type" value: "channel" }
+    allowed_value: { label: "Keyword type" value: "mappingChannel" }
     allowed_value: { label: "Condition" value: "condition" }
     allowed_value: { label: "Budget group" value: "budgetGroup" }
     allowed_value: { label: "Campaign" value: "campaign" }
@@ -520,6 +536,7 @@ view: american_family_care_search_looker_table {
     type: string
     sql: {% if dimension_selector_1._parameter_value == 'regionName' %} ${region_name}
          {% elsif dimension_selector_1._parameter_value == 'account' %} ${account}
+         {% elsif dimension_selector_1._parameter_value == 'accountRollup' %} ${account_rollup}
          {% elsif dimension_selector_1._parameter_value == 'accountGroup' %} ${account_group}
          {% elsif dimension_selector_1._parameter_value == 'channel' %} ${channel}
          {% elsif dimension_selector_1._parameter_value == 'mappingChannel' %} ${mapping_channel}
@@ -542,6 +559,7 @@ view: american_family_care_search_looker_table {
     type: string
     sql: {% if dimension_selector_2._parameter_value == 'regionName' %} ${region_name}
          {% elsif dimension_selector_2._parameter_value == 'account' %} ${account}
+         {% elsif dimension_selector_2._parameter_value == 'accountRollup' %} ${account_rollup}
          {% elsif dimension_selector_2._parameter_value == 'accountGroup' %} ${account_group}
          {% elsif dimension_selector_2._parameter_value == 'channel' %} ${channel}
          {% elsif dimension_selector_2._parameter_value == 'mappingChannel' %} ${mapping_channel}
@@ -572,8 +590,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -595,8 +613,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -618,8 +636,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -641,8 +659,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -664,8 +682,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -687,8 +705,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -714,8 +732,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -737,8 +755,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -761,8 +779,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -784,8 +802,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -808,8 +826,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -831,8 +849,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -855,8 +873,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -878,8 +896,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -901,8 +919,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -924,8 +942,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -947,8 +965,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -970,8 +988,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -997,8 +1015,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1020,8 +1038,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1043,8 +1061,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1066,8 +1084,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1092,8 +1110,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1115,8 +1133,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1138,8 +1156,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1161,8 +1179,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1184,8 +1202,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1210,8 +1228,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1233,8 +1251,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1256,8 +1274,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1279,8 +1297,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1302,8 +1320,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1325,8 +1343,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1645,8 +1663,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1687,8 +1705,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1729,8 +1747,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1771,8 +1789,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1813,8 +1831,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1855,8 +1873,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1897,8 +1915,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1939,8 +1957,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -1981,8 +1999,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2023,8 +2041,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2065,8 +2083,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2107,8 +2125,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2149,8 +2167,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2191,8 +2209,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2233,8 +2251,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2275,8 +2293,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2317,8 +2335,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2359,8 +2377,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2401,8 +2419,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2443,8 +2461,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2485,8 +2503,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2527,8 +2545,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2569,8 +2587,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2611,8 +2629,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2653,8 +2671,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2695,8 +2713,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2737,8 +2755,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2779,8 +2797,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2821,8 +2839,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2863,8 +2881,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2905,8 +2923,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2947,8 +2965,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -2989,8 +3007,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -3814,8 +3832,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -3990,8 +4008,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -4146,8 +4164,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -4170,8 +4188,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -4237,8 +4255,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -4259,8 +4277,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -4327,8 +4345,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -4351,8 +4369,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -4418,8 +4436,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
@@ -4440,8 +4458,8 @@ view: american_family_care_search_looker_table {
     link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
     link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
     link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
-    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
-    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Keyword type" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Campaign type" url: "@{AFC_DRILL_BY_CHANNEL}" }
     link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
     link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
     link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
