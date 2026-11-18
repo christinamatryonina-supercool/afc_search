@@ -407,7 +407,6 @@ view: american_family_care_search_looker_table {
     allowed_value: { label: "Budget group" value: "budgetGroup" }
     allowed_value: { label: "Campaign" value: "campaign" }
     allowed_value: { label: "Ad group" value: "adGroup" }
-    allowed_value: { label: "Device" value: "device" }
     allowed_value: { label: "Market (inferred)" value: "market" }
     allowed_value: { label: "Conversion action family" value: "conversionFamily" }
     allowed_value: { label: "Day of the week" value: "day" }
@@ -428,7 +427,6 @@ view: american_family_care_search_looker_table {
     allowed_value: { label: "Budget group" value: "budgetGroup" }
     allowed_value: { label: "Campaign" value: "campaign" }
     allowed_value: { label: "Ad group" value: "adGroup" }
-    allowed_value: { label: "Device" value: "device" }
     allowed_value: { label: "Market (inferred)" value: "market" }
     allowed_value: { label: "Conversion action family" value: "conversionFamily" }
     allowed_value: { label: "Day of the week" value: "day" }
@@ -444,7 +442,6 @@ view: american_family_care_search_looker_table {
     allowed_value: { label: "Clicks" value: "totalClicks" }
     allowed_value: { label: "CTR" value: "ctr" }
     allowed_value: { label: "CPC" value: "cpc" }
-    allowed_value: { label: "CPM" value: "cpm" }
     allowed_value: { label: "Engine conversions" value: "engineConversions" }
     allowed_value: { label: "All conversion actions" value: "allConversions" }
     allowed_value: { label: "Appointments" value: "appointments" }
@@ -461,11 +458,6 @@ view: american_family_care_search_looker_table {
     allowed_value: { label: "Revenue (all actions)" value: "revenueAllActions" }
     allowed_value: { label: "ROAS" value: "roas" }
     allowed_value: { label: "Value per conversion" value: "valuePerConversion" }
-    allowed_value: { label: "Video views" value: "totalVideoViews" }
-    allowed_value: { label: "Video completions" value: "totalVideoCompletions" }
-    allowed_value: { label: "VTR (view rate)" value: "vtr" }
-    allowed_value: { label: "Video completion rate" value: "vcr" }
-    allowed_value: { label: "CPV" value: "cpv" }
     allowed_value: { label: "Eligible impressions" value: "eligibleImpressions" }
     allowed_value: { label: "Search impression share" value: "impressionShare" }
     allowed_value: { label: "Lost IS (rank)" value: "lostIsRank" }
@@ -484,7 +476,6 @@ view: american_family_care_search_looker_table {
     allowed_value: { label: "Clicks" value: "totalClicks" }
     allowed_value: { label: "CTR" value: "ctr" }
     allowed_value: { label: "CPC" value: "cpc" }
-    allowed_value: { label: "CPM" value: "cpm" }
     allowed_value: { label: "Engine conversions" value: "engineConversions" }
     allowed_value: { label: "All conversion actions" value: "allConversions" }
     allowed_value: { label: "Appointments" value: "appointments" }
@@ -501,11 +492,6 @@ view: american_family_care_search_looker_table {
     allowed_value: { label: "Revenue (all actions)" value: "revenueAllActions" }
     allowed_value: { label: "ROAS" value: "roas" }
     allowed_value: { label: "Value per conversion" value: "valuePerConversion" }
-    allowed_value: { label: "Video views" value: "totalVideoViews" }
-    allowed_value: { label: "Video completions" value: "totalVideoCompletions" }
-    allowed_value: { label: "VTR (view rate)" value: "vtr" }
-    allowed_value: { label: "Video completion rate" value: "vcr" }
-    allowed_value: { label: "CPV" value: "cpv" }
     allowed_value: { label: "Eligible impressions" value: "eligibleImpressions" }
     allowed_value: { label: "Search impression share" value: "impressionShare" }
     allowed_value: { label: "Lost IS (rank)" value: "lostIsRank" }

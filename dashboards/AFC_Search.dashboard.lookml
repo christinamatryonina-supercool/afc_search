@@ -962,12 +962,49 @@
     width: 4
     height: 3
 
+  - name: exec_trend_spend_conversions
+    title: "Spend vs conversions by day"
+    tab_name: Executive
+    model: afc_search
+    explore: american_family_care_search_looker_table
+    type: looker_column
+    fields: [american_family_care_search_looker_table.date_date, american_family_care_search_looker_table.total_cost, american_family_care_search_looker_table.engine_conversions]
+    sorts: [american_family_care_search_looker_table.date_date]
+    limit: 500
+    show_view_names: false
+    series_types:
+      american_family_care_search_looker_table.engine_conversions: line
+    series_colors:
+      american_family_care_search_looker_table.total_cost: "#E31837"
+      american_family_care_search_looker_table.engine_conversions: "#1D1D1B"
+    y_axes: [{label: '', orientation: left, series: [{axisId: american_family_care_search_looker_table.total_cost, id: american_family_care_search_looker_table.total_cost}], showLabels: true, showValues: true, type: linear},
+      {label: '', orientation: right, series: [{axisId: american_family_care_search_looker_table.engine_conversions, id: american_family_care_search_looker_table.engine_conversions}], showLabels: true, showValues: true, type: linear}]
+    x_axis_gridlines: false
+    y_axis_gridlines: true
+    show_value_labels: false
+    legend_position: center
+    point_style: none
+    listen:
+      Date Range: american_family_care_search_looker_table.date_date
+      Region: american_family_care_search_looker_table.region
+      Account: american_family_care_search_looker_table.account
+      Condition: american_family_care_search_looker_table.condition
+      Budget Group: american_family_care_search_looker_table.budget_group
+      Mapping Channel: american_family_care_search_looker_table.mapping_channel
+      Channel: american_family_care_search_looker_table.channel
+      Device: american_family_care_search_looker_table.device
+      Conversion Type: american_family_care_search_looker_table.conversion_actions
+    row: 8
+    col: 4
+    width: 20
+    height: 9
+
   - name: exec_band_types
     type: text
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Conversions by type</span></div>'
-    row: 8
+    row: 17
     col: 4
     width: 20
     height: 2
@@ -1001,7 +1038,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 10
+    row: 19
     col: 4
     width: 4
     height: 3
@@ -1035,7 +1072,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 10
+    row: 19
     col: 8
     width: 4
     height: 3
@@ -1069,7 +1106,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 10
+    row: 19
     col: 12
     width: 4
     height: 3
@@ -1103,7 +1140,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 10
+    row: 19
     col: 16
     width: 4
     height: 3
@@ -1137,7 +1174,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 10
+    row: 19
     col: 20
     width: 4
     height: 3
@@ -1171,7 +1208,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 13
+    row: 22
     col: 4
     width: 4
     height: 3
@@ -1205,7 +1242,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 13
+    row: 22
     col: 8
     width: 4
     height: 3
@@ -1239,7 +1276,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 13
+    row: 22
     col: 12
     width: 4
     height: 3
@@ -1273,7 +1310,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 13
+    row: 22
     col: 16
     width: 4
     height: 3
@@ -1307,7 +1344,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 13
+    row: 22
     col: 20
     width: 4
     height: 3
@@ -1317,7 +1354,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Coverage</span></div>'
-    row: 16
+    row: 25
     col: 4
     width: 20
     height: 2
@@ -1351,7 +1388,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 18
+    row: 27
     col: 4
     width: 5
     height: 3
@@ -1385,7 +1422,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 18
+    row: 27
     col: 9
     width: 5
     height: 3
@@ -1419,7 +1456,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 18
+    row: 27
     col: 14
     width: 5
     height: 3
@@ -1453,7 +1490,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 18
+    row: 27
     col: 19
     width: 5
     height: 3
@@ -1463,7 +1500,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Day over day</span></div>'
-    row: 21
+    row: 30
     col: 4
     width: 20
     height: 2
@@ -1471,7 +1508,7 @@
   - name: DoD Delta Format
     type: filter
     tab_name: Executive
-    row: 23
+    row: 32
     col: 4
     width: 6
     height: 1
@@ -1484,7 +1521,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a day with the day before it. Compare period with (filter bar) sets the vs PP on every tab.</div>'
-    row: 23
+    row: 32
     col: 10
     width: 14
     height: 1
@@ -1518,7 +1555,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       DoD Delta Format: american_family_care_search_looker_table.delta_format
-    row: 24
+    row: 33
     col: 4
     width: 20
     height: 12
@@ -1528,7 +1565,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Week over week</span></div>'
-    row: 36
+    row: 45
     col: 4
     width: 20
     height: 2
@@ -1536,7 +1573,7 @@
   - name: WoW Delta Format
     type: filter
     tab_name: Executive
-    row: 38
+    row: 47
     col: 4
     width: 6
     height: 1
@@ -1549,7 +1586,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a week with the week before it. Weeks run Monday to Sunday. Green is better, red is worse.</div>'
-    row: 38
+    row: 47
     col: 10
     width: 14
     height: 1
@@ -1584,7 +1621,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       WoW Delta Format: american_family_care_search_looker_table.delta_format
-    row: 39
+    row: 48
     col: 4
     width: 20
     height: 9
@@ -1594,7 +1631,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Month over month</span></div>'
-    row: 48
+    row: 57
     col: 4
     width: 20
     height: 2
@@ -1602,7 +1639,7 @@
   - name: MoM Delta Format
     type: filter
     tab_name: Executive
-    row: 50
+    row: 59
     col: 4
     width: 6
     height: 1
@@ -1615,7 +1652,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a month with the month before it. Green is better, red is worse.</div>'
-    row: 50
+    row: 59
     col: 10
     width: 14
     height: 1
@@ -1650,7 +1687,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       MoM Delta Format: american_family_care_search_looker_table.delta_format
-    row: 51
+    row: 60
     col: 4
     width: 20
     height: 9
