@@ -165,13 +165,15 @@ view: american_family_care_search_looker_table {
 
   dimension: account_rollup {
     group_label: "Account"
-    label: "Account rollup"
+    label: "Account"
     description: "AFC's three aggregate looks: Corporate NE, Corporate SE and Corp-managed Ad.Works. Ad.Works account IDs still to be added once confirmed and connected."
     type: string
-    sql: CASE REPLACE(${TABLE}."Account_ID"::VARCHAR, '-', '')
-           WHEN '2771464674' THEN 'Corporate NE'
-           WHEN '8138284230' THEN 'Corporate SE'
-           -- WHEN '<Ad.Works account id>' THEN 'Ad.Works'   -- add when the Ad.Works accounts are connected
+    sql: CASE
+           WHEN COALESCE(${TABLE}."Source", '') = 'Budget'
+             THEN CASE ${TABLE}."Region" WHEN 'NE' THEN 'Corporate NE' WHEN 'SE' THEN 'Corporate SE' END
+           WHEN REPLACE(${TABLE}."Account_ID"::VARCHAR, '-', '') = '2771464674' THEN 'Corporate NE'
+           WHEN REPLACE(${TABLE}."Account_ID"::VARCHAR, '-', '') = '8138284230' THEN 'Corporate SE'
+           -- WHEN REPLACE(${TABLE}."Account_ID"::VARCHAR, '-', '') IN ('<Ad.Works ids>') THEN 'Ad.Works'   -- add when connected
            ELSE 'Other'
          END ;;
     drill_fields: [account, region, campaign]

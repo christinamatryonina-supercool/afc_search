@@ -76,20 +76,6 @@
     required: false
     model: afc_search
     explore: american_family_care_search_looker_table
-    listens_to_filters: [Region, Account Rollup]
-    field: american_family_care_search_looker_table.account
-    ui_config:
-      type: dropdown_menu
-      display: inline
-
-  - name: Account Rollup
-    title: "Account rollup"
-    type: field_filter
-    default_value: ""
-    allow_multiple_values: true
-    required: false
-    model: afc_search
-    explore: american_family_care_search_looker_table
     listens_to_filters: []
     field: american_family_care_search_looker_table.account_rollup
     ui_config:
@@ -644,8 +630,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -678,8 +663,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -712,8 +696,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -746,8 +729,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -780,8 +762,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -814,8 +795,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -848,8 +828,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -882,8 +861,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -916,8 +894,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -950,8 +927,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -988,8 +964,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1031,8 +1006,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1065,8 +1039,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1099,8 +1072,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1133,8 +1105,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1167,8 +1138,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1201,8 +1171,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1235,8 +1204,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1269,8 +1237,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1303,8 +1270,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1337,8 +1303,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1381,8 +1346,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1415,8 +1379,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1449,8 +1412,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1483,8 +1445,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1548,8 +1509,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1614,8 +1574,7 @@
     rows_font_size: 12
     listen:
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1680,8 +1639,7 @@
     rows_font_size: 12
     listen:
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1790,8 +1748,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1824,8 +1781,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1858,8 +1814,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1892,8 +1847,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1926,8 +1880,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -1970,8 +1923,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2004,8 +1956,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2038,8 +1989,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2072,8 +2022,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2106,8 +2055,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2140,8 +2088,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2174,8 +2121,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2208,8 +2154,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2242,8 +2187,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2276,8 +2220,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2350,8 +2293,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2418,8 +2360,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2499,8 +2440,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2534,8 +2474,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2586,8 +2525,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2696,8 +2634,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2730,8 +2667,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2764,8 +2700,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2798,8 +2733,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2832,8 +2766,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2906,8 +2839,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -2978,8 +2910,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3011,8 +2942,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3121,8 +3051,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3155,8 +3084,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3189,8 +3117,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3223,8 +3150,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3257,8 +3183,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3306,8 +3231,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3342,8 +3266,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3465,8 +3388,7 @@
         is_active: true
     listen:
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3515,8 +3437,7 @@
       even_pace: "#E31837"
     listen:
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3550,8 +3471,7 @@
       american_family_care_search_looker_table.total_cost: "#1D1D1B"
     listen:
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3602,8 +3522,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3636,8 +3555,7 @@
     legend_position: center
     listen:
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3685,8 +3603,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_range
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3755,8 +3672,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3794,8 +3710,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3830,8 +3745,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3863,8 +3777,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -3924,8 +3837,7 @@
     listen:
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Account Rollup: american_family_care_search_looker_table.account_rollup
+      Account: american_family_care_search_looker_table.account_rollup
       Condition: american_family_care_search_looker_table.condition
       Budget Group: american_family_care_search_looker_table.budget_group
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
@@ -4027,7 +3939,7 @@
     type: text
     title_text: ""
     tab_name: Dictionary
-    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:13px;color:#262D33;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Field reference</div><table style="border-collapse:collapse;width:100%;"><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Dimensions</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Date, Day, Week, Month, Year</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Calendar date of the activity. Weeks run Monday to Sunday.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Region</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">NE or SE from the mapping sheet. Budget is matched on it.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Account</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google Ads account. Two connected today: AFC Corporate New England, AFC Corporate Clinics.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Account rollup</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">AFC''s three aggregate looks: Corporate NE, Corporate SE, Corp-managed Ad.Works (Ad.Works pending account connection).</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Campaign type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google campaign type (Search, Performance Max).</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Keyword type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Brand, NonBrand or PMax from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Condition, Budget group, Account group</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">AFC campaign groupings from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Market (inferred)</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Read from the metro code or clinic town in the campaign name.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Conversion type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Filter for Conversions, CPA, CVR, Revenue and ROAS only. Spend and traffic never change with it.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Measures</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Spend, Impressions, Clicks</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">From Google Ads. Spend in dollars.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Appointment clicks, Bookings, Discharged patients, Calls, Clinic leads</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">One measure per conversion family, mapped from the live Google Ads action names. Bookings = Booking_Created_FP; Discharged patients = Booking_Discharged_FP (completed visits). Fixed, not moved by the Conversion type filter.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Conversions</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Sum of the types picked in the Conversion type filter. Default: appointment clicks, calls, clinic leads. Note: appointment clicks and clinic leads stopped recording mid-Sep 2026 (replaced by FP bookings).</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Revenue</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google conversion value for the types in the Conversion type filter.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Budget</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Monthly planned spend per Region from the budget sheet.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Calculated, always from period totals</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">CTR, CPC</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Clicks / Impressions, Spend / Clicks.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">CPA, CVR, ROAS</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / Conversions, Conversions / Clicks, Revenue / Spend.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Cost per appointment click, booking, discharged patient, call, lead</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / that conversion type.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Search impression share</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Impressions / Eligible impressions. Lost IS (rank, budget) and Click share work the same way.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Budget spent, projected</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend to date / Budget. Projected = spend to date / days elapsed x days in month.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Deltas</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">% change or absolute change (points for rates). Green is better, red is worse. For CPC and CPA lower is better.</td></tr></table></div>'
+    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:13px;color:#262D33;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Field reference</div><table style="border-collapse:collapse;width:100%;"><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Dimensions</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Date, Day, Week, Month, Year</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Calendar date of the activity. Weeks run Monday to Sunday.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Region</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">NE or SE from the mapping sheet. Budget is matched on it.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Account</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google Ads account. Two connected today: AFC Corporate New England, AFC Corporate Clinics.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Account filter</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">AFC''s three aggregate looks: Corporate NE, Corporate SE, Corp-managed Ad.Works (Ad.Works pending account connection).</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Campaign type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google campaign type (Search, Performance Max).</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Keyword type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Brand, NonBrand or PMax from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Condition, Budget group, Account group</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">AFC campaign groupings from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Market (inferred)</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Read from the metro code or clinic town in the campaign name.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Conversion type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Filter for Conversions, CPA, CVR, Revenue and ROAS only. Spend and traffic never change with it.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Measures</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Spend, Impressions, Clicks</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">From Google Ads. Spend in dollars.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Appointment clicks, Bookings, Discharged patients, Calls, Clinic leads</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">One measure per conversion family, mapped from the live Google Ads action names. Bookings = Booking_Created_FP; Discharged patients = Booking_Discharged_FP (completed visits). Fixed, not moved by the Conversion type filter.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Conversions</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Sum of the types picked in the Conversion type filter. Default: appointment clicks, calls, clinic leads. Note: appointment clicks and clinic leads stopped recording mid-Sep 2026 (replaced by FP bookings).</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Revenue</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google conversion value for the types in the Conversion type filter.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Budget</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Monthly planned spend per Region from the budget sheet.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Calculated, always from period totals</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">CTR, CPC</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Clicks / Impressions, Spend / Clicks.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">CPA, CVR, ROAS</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / Conversions, Conversions / Clicks, Revenue / Spend.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Cost per appointment click, booking, discharged patient, call, lead</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / that conversion type.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Search impression share</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Impressions / Eligible impressions. Lost IS (rank, budget) and Click share work the same way.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Budget spent, projected</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend to date / Budget. Projected = spend to date / days elapsed x days in month.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Deltas</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">% change or absolute change (points for rates). Green is better, red is worse. For CPC and CPA lower is better.</td></tr></table></div>'
     row: 7
     col: 4
     width: 20
