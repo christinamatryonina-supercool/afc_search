@@ -96,7 +96,7 @@ view: american_family_care_search_looker_table {
     label: "Week"
     description: "W40, 28 Sep to 04 Oct."
     type: string
-    sql: 'W' || ${week_of_year} || ', ' || TO_CHAR(TRY_TO_DATE(${TABLE}."Week_Start"::VARCHAR), 'DD Mon')
+    sql: 'W' || WEEKISO(TRY_TO_DATE(${TABLE}."Week_Start"::VARCHAR)) || ', ' || TO_CHAR(TRY_TO_DATE(${TABLE}."Week_Start"::VARCHAR), 'DD Mon')
          || ' to ' || TO_CHAR(TRY_TO_DATE(${TABLE}."Week_End"::VARCHAR), 'DD Mon') ;;
     order_by_field: week_start
   }
@@ -259,26 +259,34 @@ view: american_family_care_search_looker_table {
   dimension: conversion_family {
     group_label: "Conversion"
     label: "Conversion action family"
-    description: "Conversion actions grouped for reporting. Spend and traffic sit under 'Static metrics', so only use this with conversion measures."
+    description: "Google Ads conversion actions grouped for reporting (mapped from the live action names, Nov 2026). Spend and traffic sit under 'Static metrics', so only use this with conversion measures."
     type: string
     sql: CASE
-           WHEN ${conversion_type} = 'Static Metrics'             THEN 'Static metrics'
-           WHEN ${conversion_type} ILIKE '%schedule_appointment%' THEN 'Schedule appointment'
-           WHEN ${conversion_type} ILIKE '%direction%'            THEN 'Directions'
-           WHEN ${conversion_type} ILIKE '%call%'                 THEN 'Calls'
-           WHEN ${conversion_type} ILIKE '%leads (%'              THEN 'Clinic leads'
-           WHEN ${conversion_type} ILIKE 'local actions%'         THEN 'Other local actions'
+           WHEN ${conversion_type} = 'Static Metrics' THEN 'Static metrics'
+           WHEN CONTAINS(LOWER(${conversion_type}), 'discharged')                     THEN 'Discharged patients'
+           WHEN CONTAINS(LOWER(${conversion_type}), 'booking_created')
+             OR LOWER(${conversion_type}) = 'fp - appointment booked'                  THEN 'Bookings'
+           WHEN CONTAINS(LOWER(${conversion_type}), 'schedule_appointment')
+             OR LOWER(${conversion_type}) = 'schedule appointment'                     THEN 'Appointment clicks'
+           WHEN CONTAINS(LOWER(${conversion_type}), 'call')                            THEN 'Calls'
+           WHEN CONTAINS(LOWER(${conversion_type}), 'leads (')
+             OR CONTAINS(LOWER(${conversion_type}), 'leads(')                          THEN 'Clinic leads'
+           WHEN CONTAINS(LOWER(${conversion_type}), 'direction')                       THEN 'Directions'
+           WHEN LOWER(${conversion_type}) = 'landing page view'
+             OR CONTAINS(LOWER(${conversion_type}), 'find locations')
+             OR STARTSWITH(LOWER(${conversion_type}), 'local actions')                 THEN 'Site engagement'
            ELSE 'Other'
          END ;;
     drill_fields: [conversion_type]
   }
 
+
   filter: conversion_actions {
     group_label: "Conversion"
     label: "Conversion actions"
-    description: "Which action families count as Engine conversions. Empty = proposed definition: appointments, calls and clinic leads."
+    description: "Which action families count as Engine conversions. Empty = default definition: appointment clicks, calls and clinic leads."
     type: string
-    suggestions: ["Schedule appointment", "Calls", "Clinic leads", "Directions", "Other local actions", "Other"]
+    suggestions: ["Appointment clicks", "Bookings", "Discharged patients", "Calls", "Clinic leads", "Directions", "Site engagement", "Other"]
   }
 
   dimension: conversion_in_definition {
@@ -288,7 +296,7 @@ view: american_family_care_search_looker_table {
     sql: {% if conversion_actions._is_filtered %}
            {% condition conversion_actions %} ${conversion_family} {% endcondition %}
          {% else %}
-           ${conversion_family} IN ('Schedule appointment', 'Calls', 'Clinic leads')
+           ${conversion_family} IN ('Appointment clicks', 'Calls', 'Clinic leads')
          {% endif %} ;;
   }
 
@@ -513,7 +521,7 @@ view: american_family_care_search_looker_table {
     label: "Date (by granularity)"
     label_from_parameter: date_granularity
     type: string
-    sql: {% if date_granularity._parameter_value == 'week' %} TO_CHAR(${week_start}, 'YYYY-MM-DD')
+    sql: {% if date_granularity._parameter_value == 'week' %} TO_CHAR(TRY_TO_DATE(${TABLE}."Week_Start"::VARCHAR), 'YYYY-MM-DD')
          {% elsif date_granularity._parameter_value == 'month' %} TO_CHAR(DATE_TRUNC('month', ${TABLE}."Date"), 'YYYY-MM')
          {% else %} TO_CHAR(${TABLE}."Date", 'YYYY-MM-DD')
          {% endif %} ;;
@@ -756,11 +764,11 @@ view: american_family_care_search_looker_table {
 
   measure: appointments {
     group_label: "Conversions"
-    label: "Appointments"
-    description: "GA4 schedule_appointment conversions. Fixed: not moved by the Conversion type filter."
+    label: "Appointment clicks"
+    description: "Clicks on Schedule appointment (GA4 and FP tags). Intent, not a confirmed booking. Fixed: not moved by the Conversion type filter."
     type: sum
     sql: ZEROIFNULL(${total_conversions}) ;;
-    filters: [conversion_family: "Schedule appointment"]
+    filters: [conversion_family: "Appointment clicks"]
     value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
     drill_fields: [drill_campaign*]
     link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
@@ -780,7 +788,7 @@ view: american_family_care_search_looker_table {
 
   measure: cost_per_appointment {
     group_label: "Conversions"
-    label: "Cost per appointment"
+    label: "Cost per appointment click"
     description: "Spend / Appointments."
     type: number
     sql: ${total_cost} / NULLIF(${appointments}, 0) ;;
@@ -1253,9 +1261,9 @@ view: american_family_care_search_looker_table {
   measure: lost_is_rank {
     group_label: "Competition"
     label: "Lost IS (rank)"
-    description: "Impression-weighted share of eligible impressions lost to ad rank."
+    description: "Eligible impressions lost to ad rank / eligible impressions."
     type: number
-    sql: ${lost_rank_weighted} / NULLIF(${is_impressions}, 0) ;;
+    sql: ${lost_rank_weighted} / NULLIF(${eligible_impressions}, 0) ;;
     value_format: "0.0%"
     drill_fields: [drill_campaign*]
     link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
@@ -1276,9 +1284,9 @@ view: american_family_care_search_looker_table {
   measure: lost_is_budget {
     group_label: "Competition"
     label: "Lost IS (budget)"
-    description: "Impression-weighted share of eligible impressions lost to budget."
+    description: "Eligible impressions lost to budget / eligible impressions."
     type: number
-    sql: ${lost_budget_weighted} / NULLIF(${is_impressions}, 0) ;;
+    sql: ${lost_budget_weighted} / NULLIF(${eligible_impressions}, 0) ;;
     value_format: "0.0%"
     drill_fields: [drill_campaign*]
     link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
@@ -1601,8 +1609,8 @@ view: american_family_care_search_looker_table {
   measure: engine_conversions_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_prior: "yes", conversion_in_definition: "yes"] }
   measure: all_conversions_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_current: "yes"] }
   measure: all_conversions_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_prior: "yes"] }
-  measure: appointments_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_current: "yes", conversion_family: "Schedule appointment"] }
-  measure: appointments_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_prior: "yes", conversion_family: "Schedule appointment"] }
+  measure: appointments_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_current: "yes", conversion_family: "Appointment clicks"] }
+  measure: appointments_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_prior: "yes", conversion_family: "Appointment clicks"] }
   measure: calls_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_current: "yes", conversion_family: "Calls"] }
   measure: calls_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_prior: "yes", conversion_family: "Calls"] }
   measure: clinic_leads_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_current: "yes", conversion_family: "Clinic leads"] }
@@ -1978,7 +1986,7 @@ view: american_family_care_search_looker_table {
 
   measure: appointments_cur {
     group_label: "PoP - Conversions"
-    label: "Appointments"
+    label: "Appointment clicks"
     type: number
     sql: ${appointments_cur_sum} ;;
     value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
@@ -1999,14 +2007,14 @@ view: american_family_care_search_looker_table {
   }
   measure: appointments_prior {
     group_label: "PoP - Conversions"
-    label: "Appointments (comparison)"
+    label: "Appointment clicks (comparison)"
     type: number
     sql: ${appointments_prior_sum} / NULLIF(${cmp_divisor_value}, 0) ;;
     value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
   }
   measure: appointments_delta {
     group_label: "PoP - Conversions"
-    label: "Appointments delta"
+    label: "Appointment clicks delta"
     type: number
     sql: {% if delta_format._parameter_value == 'abs' %} ${appointments_cur} - ${appointments_prior} {% else %} (${appointments_cur} - ${appointments_prior}) / NULLIF(ABS(${appointments_prior}), 0) {% endif %} ;;
     html:
@@ -2020,7 +2028,7 @@ view: american_family_care_search_looker_table {
 
   measure: cost_per_appointment_cur {
     group_label: "PoP - Conversions"
-    label: "Cost per appointment"
+    label: "Cost per appointment click"
     type: number
     sql: ${total_cost_cur_sum} / NULLIF(${appointments_cur_sum}, 0) ;;
     value_format: "$#,##0.00"
@@ -2041,14 +2049,14 @@ view: american_family_care_search_looker_table {
   }
   measure: cost_per_appointment_prior {
     group_label: "PoP - Conversions"
-    label: "Cost per appointment (comparison)"
+    label: "Cost per appointment click (comparison)"
     type: number
     sql: ${total_cost_prior_sum} / NULLIF(${appointments_prior_sum}, 0) ;;
     value_format: "$#,##0.00"
   }
   measure: cost_per_appointment_delta {
     group_label: "PoP - Conversions"
-    label: "Cost per appointment delta"
+    label: "Cost per appointment click delta"
     type: number
     sql: {% if delta_format._parameter_value == 'abs' %} ${cost_per_appointment_cur} - ${cost_per_appointment_prior} {% else %} (${cost_per_appointment_cur} - ${cost_per_appointment_prior}) / NULLIF(ABS(${cost_per_appointment_prior}), 0) {% endif %} ;;
     html:
@@ -2862,7 +2870,7 @@ view: american_family_care_search_looker_table {
     group_label: "PoP - Competition"
     label: "Lost IS (rank)"
     type: number
-    sql: ${lost_rank_weighted_cur_sum} / NULLIF(${is_impressions_cur_sum}, 0) ;;
+    sql: ${lost_rank_weighted_cur_sum} / NULLIF(${eligible_impressions_cur_sum}, 0) ;;
     value_format: "0.0%"
     drill_fields: [drill_campaign*]
     link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
@@ -2883,7 +2891,7 @@ view: american_family_care_search_looker_table {
     group_label: "PoP - Competition"
     label: "Lost IS (rank) (comparison)"
     type: number
-    sql: ${lost_rank_weighted_prior_sum} / NULLIF(${is_impressions_prior_sum}, 0) ;;
+    sql: ${lost_rank_weighted_prior_sum} / NULLIF(${eligible_impressions_prior_sum}, 0) ;;
     value_format: "0.0%"
   }
   measure: lost_is_rank_delta {
@@ -2904,7 +2912,7 @@ view: american_family_care_search_looker_table {
     group_label: "PoP - Competition"
     label: "Lost IS (budget)"
     type: number
-    sql: ${lost_budget_weighted_cur_sum} / NULLIF(${is_impressions_cur_sum}, 0) ;;
+    sql: ${lost_budget_weighted_cur_sum} / NULLIF(${eligible_impressions_cur_sum}, 0) ;;
     value_format: "0.0%"
     drill_fields: [drill_campaign*]
     link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
@@ -2925,7 +2933,7 @@ view: american_family_care_search_looker_table {
     group_label: "PoP - Competition"
     label: "Lost IS (budget) (comparison)"
     type: number
-    sql: ${lost_budget_weighted_prior_sum} / NULLIF(${is_impressions_prior_sum}, 0) ;;
+    sql: ${lost_budget_weighted_prior_sum} / NULLIF(${eligible_impressions_prior_sum}, 0) ;;
     value_format: "0.0%"
   }
   measure: lost_is_budget_delta {
@@ -3098,7 +3106,7 @@ view: american_family_care_search_looker_table {
 
   measure: appointments_pop {
     group_label: "PoP - Conversions"
-    label: "Appointments % change"
+    label: "Appointment clicks % change"
     type: number
     sql: (${appointments_cur} - ${appointments_prior}) / NULLIF(ABS(${appointments_prior}), 0) ;;
     value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
@@ -3106,7 +3114,7 @@ view: american_family_care_search_looker_table {
 
   measure: cost_per_appointment_pop {
     group_label: "PoP - Conversions"
-    label: "Cost per appointment % change"
+    label: "Cost per appointment click % change"
     type: number
     sql: (${cost_per_appointment_cur} - ${cost_per_appointment_prior}) / NULLIF(ABS(${cost_per_appointment_prior}), 0) ;;
     value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
@@ -4132,5 +4140,402 @@ view: american_family_care_search_looker_table {
 
   set: drill_competition {
     fields: [account, campaign, eligible_impressions, total_impressions, impression_share, lost_is_rank, lost_is_budget, click_share]
+  }
+
+  ######## CONVERSIONS - BOOKINGS AND VISITS ########
+
+  measure: bookings_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_current: "yes", conversion_family: "Bookings"] }
+  measure: discharged_patients_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_current: "yes", conversion_family: "Discharged patients"] }
+
+  measure: bookings {
+    group_label: "Conversions"
+    label: "Bookings"
+    description: "Bookings created (Booking_Created_FP, FP - Appointment Booked). Fixed: not moved by the Conversion type filter."
+    type: sum
+    sql: ZEROIFNULL(${total_conversions}) ;;
+    filters: [conversion_family: "Bookings"]
+    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
+    drill_fields: [drill_campaign*]
+    link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
+    link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
+    link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
+    link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
+    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
+    link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
+    link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
+    link: { label: "By Market (inferred)" url: "@{AFC_DRILL_BY_MARKET}" }
+    link: { label: "By Day" url: "@{AFC_DRILL_BY_DAY}" }
+    link: { label: "By Week" url: "@{AFC_DRILL_BY_WEEK}" }
+    link: { label: "By Month" url: "@{AFC_DRILL_BY_MONTH}" }
+  }
+
+  measure: bookings_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_prior: "yes", conversion_family: "Bookings"] }
+
+  measure: bookings_cur {
+    group_label: "PoP - Conversions"
+    label: "Bookings"
+    type: number
+    sql: ${bookings_cur_sum} ;;
+    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
+    drill_fields: [drill_campaign*]
+    link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
+    link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
+    link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
+    link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
+    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
+    link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
+    link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
+    link: { label: "By Market (inferred)" url: "@{AFC_DRILL_BY_MARKET}" }
+    link: { label: "By Day" url: "@{AFC_DRILL_BY_DAY}" }
+    link: { label: "By Week" url: "@{AFC_DRILL_BY_WEEK}" }
+    link: { label: "By Month" url: "@{AFC_DRILL_BY_MONTH}" }
+  }
+
+  measure: bookings_prior {
+    group_label: "PoP - Conversions"
+    label: "Bookings (comparison)"
+    type: number
+    sql: ${bookings_prior_sum} / NULLIF(${cmp_divisor_value}, 0) ;;
+    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
+  }
+
+  measure: bookings_delta {
+    group_label: "PoP - Conversions"
+    label: "Bookings delta"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${bookings_cur} - ${bookings_prior} {% else %} (${bookings_cur} - ${bookings_prior}) / NULLIF(ABS(${bookings_prior}), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: bookings_pop {
+    group_label: "PoP - Conversions"
+    label: "Bookings % change"
+    type: number
+    sql: (${bookings_cur} - ${bookings_prior}) / NULLIF(ABS(${bookings_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: bookings_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Appointments"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${bookings} - LAG(${bookings}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${bookings} - LAG(${bookings}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${bookings}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cost_per_booking {
+    group_label: "Conversions"
+    label: "Cost per booking"
+    description: "Spend / Bookings."
+    type: number
+    sql: ${total_cost} / NULLIF(${bookings}, 0) ;;
+    value_format: "$#,##0.00"
+    drill_fields: [drill_campaign*]
+    link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
+    link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
+    link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
+    link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
+    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
+    link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
+    link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
+    link: { label: "By Market (inferred)" url: "@{AFC_DRILL_BY_MARKET}" }
+    link: { label: "By Day" url: "@{AFC_DRILL_BY_DAY}" }
+    link: { label: "By Week" url: "@{AFC_DRILL_BY_WEEK}" }
+    link: { label: "By Month" url: "@{AFC_DRILL_BY_MONTH}" }
+  }
+
+  measure: cost_per_booking_cur {
+    group_label: "PoP - Conversions"
+    label: "Cost per booking"
+    type: number
+    sql: ${total_cost_cur_sum} / NULLIF(${bookings_cur_sum}, 0) ;;
+    value_format: "$#,##0.00"
+    drill_fields: [drill_campaign*]
+    link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
+    link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
+    link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
+    link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
+    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
+    link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
+    link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
+    link: { label: "By Market (inferred)" url: "@{AFC_DRILL_BY_MARKET}" }
+    link: { label: "By Day" url: "@{AFC_DRILL_BY_DAY}" }
+    link: { label: "By Week" url: "@{AFC_DRILL_BY_WEEK}" }
+    link: { label: "By Month" url: "@{AFC_DRILL_BY_MONTH}" }
+  }
+
+  measure: cost_per_booking_prior {
+    group_label: "PoP - Conversions"
+    label: "Cost per booking (comparison)"
+    type: number
+    sql: ${total_cost_prior_sum} / NULLIF(${bookings_prior_sum}, 0) ;;
+    value_format: "$#,##0.00"
+  }
+
+  measure: cost_per_booking_delta {
+    group_label: "PoP - Conversions"
+    label: "Cost per booking delta"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cost_per_booking_cur} - ${cost_per_booking_prior} {% else %} (${cost_per_booking_cur} - ${cost_per_booking_prior}) / NULLIF(ABS(${cost_per_booking_prior}), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cost_per_booking_pop {
+    group_label: "PoP - Conversions"
+    label: "Cost per booking % change"
+    type: number
+    sql: (${cost_per_booking_cur} - ${cost_per_booking_prior}) / NULLIF(ABS(${cost_per_booking_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: cost_per_booking_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Cost per appointment"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cost_per_booking} - LAG(${cost_per_booking}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${cost_per_booking} - LAG(${cost_per_booking}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${cost_per_booking}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: discharged_patients {
+    group_label: "Conversions"
+    label: "Discharged patients"
+    description: "Patients discharged after a visit (Booking_Discharged_FP, Discharged Patient): the closest signal to a completed visit. Fixed: not moved by the Conversion type filter."
+    type: sum
+    sql: ZEROIFNULL(${total_conversions}) ;;
+    filters: [conversion_family: "Discharged patients"]
+    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
+    drill_fields: [drill_campaign*]
+    link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
+    link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
+    link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
+    link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
+    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
+    link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
+    link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
+    link: { label: "By Market (inferred)" url: "@{AFC_DRILL_BY_MARKET}" }
+    link: { label: "By Day" url: "@{AFC_DRILL_BY_DAY}" }
+    link: { label: "By Week" url: "@{AFC_DRILL_BY_WEEK}" }
+    link: { label: "By Month" url: "@{AFC_DRILL_BY_MONTH}" }
+  }
+
+  measure: discharged_patients_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_prior: "yes", conversion_family: "Discharged patients"] }
+
+  measure: discharged_patients_cur {
+    group_label: "PoP - Conversions"
+    label: "Discharged patients"
+    type: number
+    sql: ${discharged_patients_cur_sum} ;;
+    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
+    drill_fields: [drill_campaign*]
+    link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
+    link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
+    link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
+    link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
+    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
+    link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
+    link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
+    link: { label: "By Market (inferred)" url: "@{AFC_DRILL_BY_MARKET}" }
+    link: { label: "By Day" url: "@{AFC_DRILL_BY_DAY}" }
+    link: { label: "By Week" url: "@{AFC_DRILL_BY_WEEK}" }
+    link: { label: "By Month" url: "@{AFC_DRILL_BY_MONTH}" }
+  }
+
+  measure: discharged_patients_prior {
+    group_label: "PoP - Conversions"
+    label: "Discharged patients (comparison)"
+    type: number
+    sql: ${discharged_patients_prior_sum} / NULLIF(${cmp_divisor_value}, 0) ;;
+    value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
+  }
+
+  measure: discharged_patients_delta {
+    group_label: "PoP - Conversions"
+    label: "Discharged patients delta"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${discharged_patients_cur} - ${discharged_patients_prior} {% else %} (${discharged_patients_cur} - ${discharged_patients_prior}) / NULLIF(ABS(${discharged_patients_prior}), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: discharged_patients_pop {
+    group_label: "PoP - Conversions"
+    label: "Discharged patients % change"
+    type: number
+    sql: (${discharged_patients_cur} - ${discharged_patients_prior}) / NULLIF(ABS(${discharged_patients_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: discharged_patients_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Appointments"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${discharged_patients} - LAG(${discharged_patients}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${discharged_patients} - LAG(${discharged_patients}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${discharged_patients}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'up' %}
+      {% assign f = 'count' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cost_per_discharged_patient {
+    group_label: "Conversions"
+    label: "Cost per discharged patient"
+    description: "Spend / Discharged patients."
+    type: number
+    sql: ${total_cost} / NULLIF(${discharged_patients}, 0) ;;
+    value_format: "$#,##0.00"
+    drill_fields: [drill_campaign*]
+    link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
+    link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
+    link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
+    link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
+    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
+    link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
+    link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
+    link: { label: "By Market (inferred)" url: "@{AFC_DRILL_BY_MARKET}" }
+    link: { label: "By Day" url: "@{AFC_DRILL_BY_DAY}" }
+    link: { label: "By Week" url: "@{AFC_DRILL_BY_WEEK}" }
+    link: { label: "By Month" url: "@{AFC_DRILL_BY_MONTH}" }
+  }
+
+  measure: cost_per_discharged_patient_cur {
+    group_label: "PoP - Conversions"
+    label: "Cost per discharged patient"
+    type: number
+    sql: ${total_cost_cur_sum} / NULLIF(${discharged_patients_cur_sum}, 0) ;;
+    value_format: "$#,##0.00"
+    drill_fields: [drill_campaign*]
+    link: { label: "By Region" url: "@{AFC_DRILL_BY_REGION}" }
+    link: { label: "By Account" url: "@{AFC_DRILL_BY_ACCOUNT}" }
+    link: { label: "By Condition" url: "@{AFC_DRILL_BY_CONDITION}" }
+    link: { label: "By Budget group" url: "@{AFC_DRILL_BY_BUDGET_GROUP}" }
+    link: { label: "By Mapping channel" url: "@{AFC_DRILL_BY_MAPPING_CHANNEL}" }
+    link: { label: "By Channel" url: "@{AFC_DRILL_BY_CHANNEL}" }
+    link: { label: "By Campaign" url: "@{AFC_DRILL_BY_CAMPAIGN}" }
+    link: { label: "By Ad group" url: "@{AFC_DRILL_BY_AD_GROUP}" }
+    link: { label: "By Device" url: "@{AFC_DRILL_BY_DEVICE}" }
+    link: { label: "By Market (inferred)" url: "@{AFC_DRILL_BY_MARKET}" }
+    link: { label: "By Day" url: "@{AFC_DRILL_BY_DAY}" }
+    link: { label: "By Week" url: "@{AFC_DRILL_BY_WEEK}" }
+    link: { label: "By Month" url: "@{AFC_DRILL_BY_MONTH}" }
+  }
+
+  measure: cost_per_discharged_patient_prior {
+    group_label: "PoP - Conversions"
+    label: "Cost per discharged patient (comparison)"
+    type: number
+    sql: ${total_cost_prior_sum} / NULLIF(${discharged_patients_prior_sum}, 0) ;;
+    value_format: "$#,##0.00"
+  }
+
+  measure: cost_per_discharged_patient_delta {
+    group_label: "PoP - Conversions"
+    label: "Cost per discharged patient delta"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cost_per_discharged_patient_cur} - ${cost_per_discharged_patient_prior} {% else %} (${cost_per_discharged_patient_cur} - ${cost_per_discharged_patient_prior}) / NULLIF(ABS(${cost_per_discharged_patient_prior}), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: cost_per_discharged_patient_pop {
+    group_label: "PoP - Conversions"
+    label: "Cost per discharged patient % change"
+    type: number
+    sql: (${cost_per_discharged_patient_cur} - ${cost_per_discharged_patient_prior}) / NULLIF(ABS(${cost_per_discharged_patient_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
+  }
+
+  measure: cost_per_discharged_patient_change {
+    group_label: "Row over row - Conversions"
+    label: "Δ Cost per appointment"
+    type: number
+    sql: {% if delta_format._parameter_value == 'abs' %} ${cost_per_discharged_patient} - LAG(${cost_per_discharged_patient}) OVER (ORDER BY MIN(${TABLE}."Date")) {% else %} (${cost_per_discharged_patient} - LAG(${cost_per_discharged_patient}) OVER (ORDER BY MIN(${TABLE}."Date"))) / NULLIF(ABS(LAG(${cost_per_discharged_patient}) OVER (ORDER BY MIN(${TABLE}."Date"))), 0) {% endif %} ;;
+    html:
+      {% if value == null %}<span style="color:#8A929C">&#8212;</span>{% else %}
+      {% assign pol = 'down' %}
+      {% assign f = 'money2' %}
+      {% if value == 0 or pol == 'none' %}{% assign c = '#5E6671' %}{% elsif value > 0 and pol == 'up' %}{% assign c = '#1E7B4F' %}{% elsif value < 0 and pol == 'down' %}{% assign c = '#1E7B4F' %}{% else %}{% assign c = '#B42318' %}{% endif %}
+      <span style="color:{{ c }};font-weight:600">{% if value > 0 %}&#9650;{% elsif value < 0 %}&#9660;{% endif %}
+      {% if delta_format._parameter_value == 'abs' %}{% if f == 'pct' %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 2 }} pts{% elsif f == 'money' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 0 }}{% else %}{{ value | round: 0 }}{% endif %}{% elsif f == 'money2' %}{% if value < 0 %}-{% else %}+{% endif %}&#36;{% if value < 0 %}{{ value | times: -1 | round: 2 }}{% else %}{{ value | round: 2 }}{% endif %}{% elsif f == 'x' %}{% if value > 0 %}+{% endif %}{{ value | round: 2 }}x{% else %}{% if value > 0 %}+{% endif %}{{ value | round: 0 }}{% endif %}{% else %}{% if value > 0 %}+{% endif %}{{ value | times: 100 | round: 1 }}%{% endif %}</span>{% endif %} ;;
+  }
+
+  measure: booking_to_visit_rate {
+    group_label: "Conversions"
+    label: "Booking to visit rate"
+    description: "Discharged patients / Bookings: share of bookings that became a visit."
+    type: number
+    sql: ${discharged_patients} / NULLIF(${bookings}, 0) ;;
+    value_format: "0.0%"
+  }
+  measure: booking_to_visit_rate_cur {
+    group_label: "PoP - Conversions"
+    label: "Booking to visit rate"
+    type: number
+    sql: ${discharged_patients_cur_sum} / NULLIF(${bookings_cur_sum}, 0) ;;
+    value_format: "0.0%"
+  }
+  measure: booking_to_visit_rate_prior {
+    group_label: "PoP - Conversions"
+    label: "Booking to visit rate (comparison)"
+    type: number
+    sql: ${discharged_patients_prior_sum} / NULLIF(${bookings_prior_sum}, 0) ;;
+    value_format: "0.0%"
+  }
+  measure: booking_to_visit_rate_pop {
+    group_label: "PoP - Conversions"
+    label: "Booking to visit rate % change"
+    type: number
+    sql: (${booking_to_visit_rate_cur} - ${booking_to_visit_rate_prior}) / NULLIF(ABS(${booking_to_visit_rate_prior}), 0) ;;
+    value_format: "\"▲ \"0.0%;\"▼ \"0.0%;0.0%"
   }
 }

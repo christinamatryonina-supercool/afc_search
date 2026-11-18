@@ -155,7 +155,7 @@
   - name: Conversion Type
     title: "Conversion type"
     type: field_filter
-    default_value: "Schedule appointment,Calls,Clinic leads"
+    default_value: "Appointment clicks,Calls,Clinic leads"
     allow_multiple_values: true
     required: false
     model: afc_search
@@ -178,7 +178,7 @@
     field: american_family_care_search_looker_table.comparison_mode
     ui_config:
       type: dropdown_menu
-      display: overflow
+      display: inline
 
   - name: DoD Delta Format
     title: "Show delta as"
@@ -449,7 +449,7 @@
   - name: Traffic Breakdown Rows
     title: "Breakdown rows"
     type: field_filter
-    default_value: "device"
+    default_value: "mappingChannel"
     allow_multiple_values: false
     required: true
     model: afc_search
@@ -484,20 +484,6 @@
     explore: american_family_care_search_looker_table
     listens_to_filters: []
     field: american_family_care_search_looker_table.metric_selector_2
-    ui_config:
-      type: dropdown_menu
-      display: overflow
-
-  - name: Comp Campaign
-    title: "Campaign"
-    type: field_filter
-    default_value: ""
-    allow_multiple_values: true
-    required: false
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    listens_to_filters: [Region, Account]
-    field: american_family_care_search_looker_table.campaign
     ui_config:
       type: dropdown_menu
       display: overflow
@@ -544,7 +530,7 @@
   - name: Search Metric
     title: "Search metric"
     type: field_filter
-    default_value: "totalImpressions"
+    default_value: "totalClicks"
     allow_multiple_values: false
     required: true
     model: afc_search
@@ -772,13 +758,13 @@
     width: 4
     height: 3
 
-  - name: exec_kpi_cpm
-    title: "CPM"
+  - name: exec_kpi_total_impressions
+    title: "Impressions"
     tab_name: Executive
     model: afc_search
     explore: american_family_care_search_looker_table
     type: single_value
-    fields: [american_family_care_search_looker_table.cpm_cur, american_family_care_search_looker_table.cpm_pop]
+    fields: [american_family_care_search_looker_table.total_impressions_cur, american_family_care_search_looker_table.total_impressions_pop]
     filters:
       american_family_care_search_looker_table.in_cmp_scope: "Yes"
     limit: 1
@@ -987,7 +973,7 @@
     height: 2
 
   - name: exec_kpi_appointments
-    title: "Appointments"
+    title: "Appointment clicks"
     tab_name: Executive
     model: afc_search
     explore: american_family_care_search_looker_table
@@ -1017,7 +1003,75 @@
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 10
     col: 4
-    width: 5
+    width: 4
+    height: 3
+
+  - name: exec_kpi_bookings
+    title: "Bookings"
+    tab_name: Executive
+    model: afc_search
+    explore: american_family_care_search_looker_table
+    type: single_value
+    fields: [american_family_care_search_looker_table.bookings_cur, american_family_care_search_looker_table.bookings_pop]
+    filters:
+      american_family_care_search_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_search_looker_table.date_range
+      Region: american_family_care_search_looker_table.region
+      Account: american_family_care_search_looker_table.account
+      Condition: american_family_care_search_looker_table.condition
+      Budget Group: american_family_care_search_looker_table.budget_group
+      Mapping Channel: american_family_care_search_looker_table.mapping_channel
+      Channel: american_family_care_search_looker_table.channel
+      Device: american_family_care_search_looker_table.device
+      Conversion Type: american_family_care_search_looker_table.conversion_actions
+      KPI Comparison: american_family_care_search_looker_table.comparison_mode
+    row: 10
+    col: 8
+    width: 4
+    height: 3
+
+  - name: exec_kpi_discharged_patients
+    title: "Discharged patients"
+    tab_name: Executive
+    model: afc_search
+    explore: american_family_care_search_looker_table
+    type: single_value
+    fields: [american_family_care_search_looker_table.discharged_patients_cur, american_family_care_search_looker_table.discharged_patients_pop]
+    filters:
+      american_family_care_search_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_search_looker_table.date_range
+      Region: american_family_care_search_looker_table.region
+      Account: american_family_care_search_looker_table.account
+      Condition: american_family_care_search_looker_table.condition
+      Budget Group: american_family_care_search_looker_table.budget_group
+      Mapping Channel: american_family_care_search_looker_table.mapping_channel
+      Channel: american_family_care_search_looker_table.channel
+      Device: american_family_care_search_looker_table.device
+      Conversion Type: american_family_care_search_looker_table.conversion_actions
+      KPI Comparison: american_family_care_search_looker_table.comparison_mode
+    row: 10
+    col: 12
+    width: 4
     height: 3
 
   - name: exec_kpi_calls
@@ -1050,8 +1104,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 10
-    col: 9
-    width: 5
+    col: 16
+    width: 4
     height: 3
 
   - name: exec_kpi_clinic_leads
@@ -1084,46 +1138,12 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 10
-    col: 14
-    width: 5
-    height: 3
-
-  - name: exec_kpi_engine_conversions_2
-    title: "Conversions"
-    tab_name: Executive
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.engine_conversions_cur, american_family_care_search_looker_table.engine_conversions_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Device: american_family_care_search_looker_table.device
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 10
-    col: 19
-    width: 5
+    col: 20
+    width: 4
     height: 3
 
   - name: exec_kpi_cost_per_appointment
-    title: "Cost per appointment"
+    title: "Cost per appointment click"
     tab_name: Executive
     model: afc_search
     explore: american_family_care_search_looker_table
@@ -1153,7 +1173,75 @@
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 13
     col: 4
-    width: 5
+    width: 4
+    height: 3
+
+  - name: exec_kpi_cost_per_booking
+    title: "Cost per booking"
+    tab_name: Executive
+    model: afc_search
+    explore: american_family_care_search_looker_table
+    type: single_value
+    fields: [american_family_care_search_looker_table.cost_per_booking_cur, american_family_care_search_looker_table.cost_per_booking_pop]
+    filters:
+      american_family_care_search_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_search_looker_table.date_range
+      Region: american_family_care_search_looker_table.region
+      Account: american_family_care_search_looker_table.account
+      Condition: american_family_care_search_looker_table.condition
+      Budget Group: american_family_care_search_looker_table.budget_group
+      Mapping Channel: american_family_care_search_looker_table.mapping_channel
+      Channel: american_family_care_search_looker_table.channel
+      Device: american_family_care_search_looker_table.device
+      Conversion Type: american_family_care_search_looker_table.conversion_actions
+      KPI Comparison: american_family_care_search_looker_table.comparison_mode
+    row: 13
+    col: 8
+    width: 4
+    height: 3
+
+  - name: exec_kpi_cost_per_discharged_patient
+    title: "Cost per discharged patient"
+    tab_name: Executive
+    model: afc_search
+    explore: american_family_care_search_looker_table
+    type: single_value
+    fields: [american_family_care_search_looker_table.cost_per_discharged_patient_cur, american_family_care_search_looker_table.cost_per_discharged_patient_pop]
+    filters:
+      american_family_care_search_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_search_looker_table.date_range
+      Region: american_family_care_search_looker_table.region
+      Account: american_family_care_search_looker_table.account
+      Condition: american_family_care_search_looker_table.condition
+      Budget Group: american_family_care_search_looker_table.budget_group
+      Mapping Channel: american_family_care_search_looker_table.mapping_channel
+      Channel: american_family_care_search_looker_table.channel
+      Device: american_family_care_search_looker_table.device
+      Conversion Type: american_family_care_search_looker_table.conversion_actions
+      KPI Comparison: american_family_care_search_looker_table.comparison_mode
+    row: 13
+    col: 12
+    width: 4
     height: 3
 
   - name: exec_kpi_cost_per_call
@@ -1186,8 +1274,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 13
-    col: 9
-    width: 5
+    col: 16
+    width: 4
     height: 3
 
   - name: exec_kpi_cost_per_lead
@@ -1220,42 +1308,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 13
-    col: 14
-    width: 5
-    height: 3
-
-  - name: exec_kpi_cpa_2
-    title: "CPA"
-    tab_name: Executive
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.cpa_cur, american_family_care_search_looker_table.cpa_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Device: american_family_care_search_looker_table.device
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 13
-    col: 19
-    width: 5
+    col: 20
+    width: 4
     height: 3
 
   - name: exec_band_coverage
@@ -1425,25 +1479,14 @@
       type: dropdown_menu
       display: overflow
 
-  - name: KPI Comparison
-    type: filter
-    tab_name: Executive
-    row: 23
-    col: 10
-    width: 6
-    height: 1
-    ui_config:
-      type: dropdown_menu
-      display: overflow
-
   - name: exec_dod_note
     type: text
     title_text: ""
     tab_name: Executive
-    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a day with the day before it. Compare to sets the vs PP of every KPI tile.</div>'
+    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a day with the day before it. Compare period with (filter bar) sets the vs PP on every tab.</div>'
     row: 23
-    col: 16
-    width: 8
+    col: 10
+    width: 14
     height: 1
 
   - name: exec_dod_table
@@ -1824,13 +1867,13 @@
     width: 4
     height: 3
 
-  - name: conv_kpi_roas
-    title: "ROAS"
+  - name: conv_kpi_booking_to_visit_rate
+    title: "Booking to visit rate"
     tab_name: Conversion
     model: afc_search
     explore: american_family_care_search_looker_table
     type: single_value
-    fields: [american_family_care_search_looker_table.roas_cur, american_family_care_search_looker_table.roas_pop]
+    fields: [american_family_care_search_looker_table.booking_to_visit_rate_cur, american_family_care_search_looker_table.booking_to_visit_rate_pop]
     filters:
       american_family_care_search_looker_table.in_cmp_scope: "Yes"
     limit: 1
@@ -1869,7 +1912,7 @@
     height: 2
 
   - name: conv_kpi_appointments
-    title: "Appointments"
+    title: "Appointment clicks"
     tab_name: Conversion
     model: afc_search
     explore: american_family_care_search_looker_table
@@ -1899,7 +1942,75 @@
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 7
     col: 4
-    width: 5
+    width: 4
+    height: 3
+
+  - name: conv_kpi_bookings
+    title: "Bookings"
+    tab_name: Conversion
+    model: afc_search
+    explore: american_family_care_search_looker_table
+    type: single_value
+    fields: [american_family_care_search_looker_table.bookings_cur, american_family_care_search_looker_table.bookings_pop]
+    filters:
+      american_family_care_search_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_search_looker_table.date_range
+      Region: american_family_care_search_looker_table.region
+      Account: american_family_care_search_looker_table.account
+      Condition: american_family_care_search_looker_table.condition
+      Budget Group: american_family_care_search_looker_table.budget_group
+      Mapping Channel: american_family_care_search_looker_table.mapping_channel
+      Channel: american_family_care_search_looker_table.channel
+      Device: american_family_care_search_looker_table.device
+      Conversion Type: american_family_care_search_looker_table.conversion_actions
+      KPI Comparison: american_family_care_search_looker_table.comparison_mode
+    row: 7
+    col: 8
+    width: 4
+    height: 3
+
+  - name: conv_kpi_discharged_patients
+    title: "Discharged patients"
+    tab_name: Conversion
+    model: afc_search
+    explore: american_family_care_search_looker_table
+    type: single_value
+    fields: [american_family_care_search_looker_table.discharged_patients_cur, american_family_care_search_looker_table.discharged_patients_pop]
+    filters:
+      american_family_care_search_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_search_looker_table.date_range
+      Region: american_family_care_search_looker_table.region
+      Account: american_family_care_search_looker_table.account
+      Condition: american_family_care_search_looker_table.condition
+      Budget Group: american_family_care_search_looker_table.budget_group
+      Mapping Channel: american_family_care_search_looker_table.mapping_channel
+      Channel: american_family_care_search_looker_table.channel
+      Device: american_family_care_search_looker_table.device
+      Conversion Type: american_family_care_search_looker_table.conversion_actions
+      KPI Comparison: american_family_care_search_looker_table.comparison_mode
+    row: 7
+    col: 12
+    width: 4
     height: 3
 
   - name: conv_kpi_calls
@@ -1932,8 +2043,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 7
-    col: 9
-    width: 5
+    col: 16
+    width: 4
     height: 3
 
   - name: conv_kpi_clinic_leads
@@ -1966,46 +2077,12 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 7
-    col: 14
-    width: 5
-    height: 3
-
-  - name: conv_kpi_total_revenue
-    title: "Revenue"
-    tab_name: Conversion
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.total_revenue_cur, american_family_care_search_looker_table.total_revenue_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Device: american_family_care_search_looker_table.device
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 7
-    col: 19
-    width: 5
+    col: 20
+    width: 4
     height: 3
 
   - name: conv_kpi_cost_per_appointment
-    title: "Cost per appointment"
+    title: "Cost per appointment click"
     tab_name: Conversion
     model: afc_search
     explore: american_family_care_search_looker_table
@@ -2035,7 +2112,75 @@
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 10
     col: 4
-    width: 5
+    width: 4
+    height: 3
+
+  - name: conv_kpi_cost_per_booking
+    title: "Cost per booking"
+    tab_name: Conversion
+    model: afc_search
+    explore: american_family_care_search_looker_table
+    type: single_value
+    fields: [american_family_care_search_looker_table.cost_per_booking_cur, american_family_care_search_looker_table.cost_per_booking_pop]
+    filters:
+      american_family_care_search_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_search_looker_table.date_range
+      Region: american_family_care_search_looker_table.region
+      Account: american_family_care_search_looker_table.account
+      Condition: american_family_care_search_looker_table.condition
+      Budget Group: american_family_care_search_looker_table.budget_group
+      Mapping Channel: american_family_care_search_looker_table.mapping_channel
+      Channel: american_family_care_search_looker_table.channel
+      Device: american_family_care_search_looker_table.device
+      Conversion Type: american_family_care_search_looker_table.conversion_actions
+      KPI Comparison: american_family_care_search_looker_table.comparison_mode
+    row: 10
+    col: 8
+    width: 4
+    height: 3
+
+  - name: conv_kpi_cost_per_discharged_patient
+    title: "Cost per discharged patient"
+    tab_name: Conversion
+    model: afc_search
+    explore: american_family_care_search_looker_table
+    type: single_value
+    fields: [american_family_care_search_looker_table.cost_per_discharged_patient_cur, american_family_care_search_looker_table.cost_per_discharged_patient_pop]
+    filters:
+      american_family_care_search_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_search_looker_table.date_range
+      Region: american_family_care_search_looker_table.region
+      Account: american_family_care_search_looker_table.account
+      Condition: american_family_care_search_looker_table.condition
+      Budget Group: american_family_care_search_looker_table.budget_group
+      Mapping Channel: american_family_care_search_looker_table.mapping_channel
+      Channel: american_family_care_search_looker_table.channel
+      Device: american_family_care_search_looker_table.device
+      Conversion Type: american_family_care_search_looker_table.conversion_actions
+      KPI Comparison: american_family_care_search_looker_table.comparison_mode
+    row: 10
+    col: 12
+    width: 4
     height: 3
 
   - name: conv_kpi_cost_per_call
@@ -2068,8 +2213,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 10
-    col: 9
-    width: 5
+    col: 16
+    width: 4
     height: 3
 
   - name: conv_kpi_cost_per_lead
@@ -2102,42 +2247,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 10
-    col: 14
-    width: 5
-    height: 3
-
-  - name: conv_kpi_value_per_conversion
-    title: "Value per conversion"
-    tab_name: Conversion
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.value_per_conversion_cur, american_family_care_search_looker_table.value_per_conversion_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Device: american_family_care_search_looker_table.device
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 10
-    col: 19
-    width: 5
+    col: 20
+    width: 4
     height: 3
 
   - name: Conv Granularity
@@ -2417,7 +2528,7 @@
     model: afc_search
     explore: american_family_care_search_looker_table
     type: looker_grid
-    fields: [american_family_care_search_looker_table.selected_dimension_1, american_family_care_search_looker_table.total_cost, american_family_care_search_looker_table.appointments, american_family_care_search_looker_table.cost_per_appointment, american_family_care_search_looker_table.calls, american_family_care_search_looker_table.cost_per_call, american_family_care_search_looker_table.clinic_leads, american_family_care_search_looker_table.cost_per_lead, american_family_care_search_looker_table.engine_conversions, american_family_care_search_looker_table.cpa, american_family_care_search_looker_table.cvr]
+    fields: [american_family_care_search_looker_table.selected_dimension_1, american_family_care_search_looker_table.total_cost, american_family_care_search_looker_table.appointments, american_family_care_search_looker_table.cost_per_appointment, american_family_care_search_looker_table.bookings, american_family_care_search_looker_table.cost_per_booking, american_family_care_search_looker_table.discharged_patients, american_family_care_search_looker_table.cost_per_discharged_patient, american_family_care_search_looker_table.calls, american_family_care_search_looker_table.cost_per_call, american_family_care_search_looker_table.clinic_leads, american_family_care_search_looker_table.cost_per_lead, american_family_care_search_looker_table.engine_conversions, american_family_care_search_looker_table.cpa, american_family_care_search_looker_table.cvr]
     sorts: [american_family_care_search_looker_table.total_cost desc]
     limit: 500
     show_view_names: false
@@ -2662,13 +2773,13 @@
     width: 4
     height: 3
 
-  - name: traf_kpi_cpm
-    title: "CPM"
+  - name: traf_kpi_total_cost
+    title: "Spend"
     tab_name: Traffic
     model: afc_search
     explore: american_family_care_search_looker_table
     type: single_value
-    fields: [american_family_care_search_looker_table.cpm_cur, american_family_care_search_looker_table.cpm_pop]
+    fields: [american_family_care_search_looker_table.total_cost_cur, american_family_care_search_looker_table.total_cost_pop]
     filters:
       american_family_care_search_looker_table.in_cmp_scope: "Yes"
     limit: 1
@@ -2696,156 +2807,10 @@
     width: 4
     height: 3
 
-  - name: traf_band_video
-    type: text
-    title_text: ""
-    tab_name: Traffic
-    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Video</span></div>'
-    row: 5
-    col: 4
-    width: 20
-    height: 2
-
-  - name: traf_kpi_total_video_views
-    title: "Video views"
-    tab_name: Traffic
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.total_video_views_cur, american_family_care_search_looker_table.total_video_views_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Device: american_family_care_search_looker_table.device
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 7
-    col: 4
-    width: 5
-    height: 3
-
-  - name: traf_kpi_total_video_completions
-    title: "Video completions"
-    tab_name: Traffic
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.total_video_completions_cur, american_family_care_search_looker_table.total_video_completions_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Device: american_family_care_search_looker_table.device
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 7
-    col: 9
-    width: 5
-    height: 3
-
-  - name: traf_kpi_vtr
-    title: "VTR"
-    tab_name: Traffic
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.vtr_cur, american_family_care_search_looker_table.vtr_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Device: american_family_care_search_looker_table.device
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 7
-    col: 14
-    width: 5
-    height: 3
-
-  - name: traf_kpi_vcr
-    title: "Video completion rate"
-    tab_name: Traffic
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.vcr_cur, american_family_care_search_looker_table.vcr_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Device: american_family_care_search_looker_table.device
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 7
-    col: 19
-    width: 5
-    height: 3
-
   - name: Traffic Granularity
     type: filter
     tab_name: Traffic
-    row: 10
+    row: 5
     col: 4
     width: 6
     height: 1
@@ -2856,7 +2821,7 @@
   - name: Traffic Bars
     type: filter
     tab_name: Traffic
-    row: 10
+    row: 5
     col: 10
     width: 7
     height: 1
@@ -2867,7 +2832,7 @@
   - name: Traffic Line
     type: filter
     tab_name: Traffic
-    row: 10
+    row: 5
     col: 17
     width: 7
     height: 1
@@ -2913,7 +2878,7 @@
       Traffic Granularity: american_family_care_search_looker_table.date_granularity
       Traffic Bars: american_family_care_search_looker_table.metric_selector_1
       Traffic Line: american_family_care_search_looker_table.metric_selector_2
-    row: 11
+    row: 6
     col: 4
     width: 20
     height: 8
@@ -2921,7 +2886,7 @@
   - name: Traffic Breakdown Rows
     type: filter
     tab_name: Traffic
-    row: 19
+    row: 14
     col: 4
     width: 5
     height: 1
@@ -2932,7 +2897,7 @@
   - name: Traffic Breakdown Metric
     type: filter
     tab_name: Traffic
-    row: 19
+    row: 14
     col: 9
     width: 5
     height: 1
@@ -2943,7 +2908,7 @@
   - name: Top Campaigns By
     type: filter
     tab_name: Traffic
-    row: 19
+    row: 14
     col: 14
     width: 10
     height: 1
@@ -2984,7 +2949,7 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Traffic Breakdown Rows: american_family_care_search_looker_table.dimension_selector_1
       Traffic Breakdown Metric: american_family_care_search_looker_table.metric_selector_1
-    row: 20
+    row: 15
     col: 4
     width: 10
     height: 9
@@ -3016,7 +2981,7 @@
       Device: american_family_care_search_looker_table.device
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       Top Campaigns By: american_family_care_search_looker_table.metric_selector_2
-    row: 20
+    row: 15
     col: 14
     width: 10
     height: 9
@@ -3351,58 +3316,6 @@
     col: 4
     width: 20
     height: 5
-
-  - name: Comp Campaign
-    type: filter
-    tab_name: Competition
-    row: 19
-    col: 4
-    width: 8
-    height: 1
-    ui_config:
-      type: dropdown_menu
-      display: overflow
-
-  - name: comp_by_campaign
-    title: "Competition by campaign"
-    tab_name: Competition
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: looker_grid
-    fields: [american_family_care_search_looker_table.campaign, american_family_care_search_looker_table.account, american_family_care_search_looker_table.mapping_channel, american_family_care_search_looker_table.eligible_impressions, american_family_care_search_looker_table.total_impressions, american_family_care_search_looker_table.impression_share, american_family_care_search_looker_table.lost_is_rank, american_family_care_search_looker_table.lost_is_budget, american_family_care_search_looker_table.click_share]
-    filters:
-      american_family_care_search_looker_table.eligible_impressions: ">=500"
-    sorts: [american_family_care_search_looker_table.eligible_impressions desc]
-    limit: 500
-    show_view_names: false
-    show_row_numbers: false
-    show_totals: true
-    show_row_totals: false
-    table_theme: white
-    limit_displayed_rows: false
-    enable_conditional_formatting: false
-    header_font_size: 12
-    rows_font_size: 12
-    series_cell_visualizations:
-      american_family_care_search_looker_table.impression_share:
-        is_active: true
-    listen:
-      Date Range: american_family_care_search_looker_table.date_date
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Device: american_family_care_search_looker_table.device
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      Comp Campaign: american_family_care_search_looker_table.campaign
-    row: 20
-    col: 4
-    width: 20
-    height: 10
-
-  # ----------------------------------------------------------- TAB: Operations
 
   - name: nav_ops_logo
     type: text
@@ -3951,7 +3864,7 @@
     model: afc_search
     explore: american_family_care_search_looker_table
     type: looker_grid
-    fields: [american_family_care_search_looker_table.mapping_channel, american_family_care_search_looker_table.campaign, american_family_care_search_looker_table.total_cost, american_family_care_search_looker_table.total_impressions, american_family_care_search_looker_table.total_clicks, american_family_care_search_looker_table.ctr, american_family_care_search_looker_table.cpc, american_family_care_search_looker_table.cpm, american_family_care_search_looker_table.engine_conversions, american_family_care_search_looker_table.cpa, american_family_care_search_looker_table.cvr, american_family_care_search_looker_table.total_revenue, american_family_care_search_looker_table.roas]
+    fields: [american_family_care_search_looker_table.mapping_channel, american_family_care_search_looker_table.campaign, american_family_care_search_looker_table.total_cost, american_family_care_search_looker_table.total_impressions, american_family_care_search_looker_table.total_clicks, american_family_care_search_looker_table.ctr, american_family_care_search_looker_table.cpc, american_family_care_search_looker_table.engine_conversions, american_family_care_search_looker_table.cpa, american_family_care_search_looker_table.cvr, american_family_care_search_looker_table.total_revenue, american_family_care_search_looker_table.roas]
     sorts: [american_family_care_search_looker_table.total_cost desc]
     limit: 500
     show_view_names: false
@@ -4076,7 +3989,7 @@
     type: text
     title_text: ""
     tab_name: Dictionary
-    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:13px;color:#262D33;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Field reference</div><table style="border-collapse:collapse;width:100%;"><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Dimensions</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Date, Day, Week, Month, Year</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Calendar date of the activity. Weeks run Monday to Sunday.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Region</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">NE or SE from the mapping sheet. Budget is matched on it.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Account</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google Ads account. Two roll-up accounts today.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Channel</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Platform channel: Google campaign type (Search, Performance Max).</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Mapping channel</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Brand, NonBrand or PMax from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Condition, Budget group, Account group</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">AFC campaign groupings from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Market (inferred)</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Read from the metro code or clinic town in the campaign name.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Conversion type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Filter for Conversions, CPA, CVR, Revenue and ROAS only. Spend and traffic never change with it.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Measures</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Spend, Impressions, Clicks</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">From Google Ads. Spend in dollars.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Appointments, Calls, Clinic leads</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">One measure per pursued conversion type. Fixed, not moved by the Conversion type filter.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Conversions</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Sum of the types picked in the Conversion type filter. Default: appointments, calls, clinic leads.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Revenue</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google conversion value for the types in the Conversion type filter.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Budget</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Monthly planned spend per Region from the budget sheet.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Calculated, always from period totals</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">CTR, CPC, CPM</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Clicks / Impressions, Spend / Clicks, Spend / Impressions x 1,000.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">CPA, CVR, ROAS</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / Conversions, Conversions / Clicks, Revenue / Spend.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Cost per appointment, call, lead</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / that conversion type.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Search impression share</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Impressions / Eligible impressions. Lost IS (rank, budget) and Click share work the same way.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">VTR, Video completion rate</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Video views / Impressions and Video completions / Video views.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Budget spent, projected</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend to date / Budget. Projected = spend to date / days elapsed x days in month.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Deltas</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">% change or absolute change (points for rates). Green is better, red is worse. For CPC and CPA lower is better.</td></tr></table></div>'
+    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:13px;color:#262D33;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Field reference</div><table style="border-collapse:collapse;width:100%;"><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Dimensions</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Date, Day, Week, Month, Year</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Calendar date of the activity. Weeks run Monday to Sunday.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Region</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">NE or SE from the mapping sheet. Budget is matched on it.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Account</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google Ads account. Two roll-up accounts today.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Channel</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Platform channel: Google campaign type (Search, Performance Max).</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Mapping channel</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Brand, NonBrand or PMax from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Condition, Budget group, Account group</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">AFC campaign groupings from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Market (inferred)</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Read from the metro code or clinic town in the campaign name.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Conversion type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Filter for Conversions, CPA, CVR, Revenue and ROAS only. Spend and traffic never change with it.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Measures</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Spend, Impressions, Clicks</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">From Google Ads. Spend in dollars.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Appointment clicks, Bookings, Discharged patients, Calls, Clinic leads</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">One measure per conversion family, mapped from the live Google Ads action names. Bookings = Booking_Created_FP; Discharged patients = Booking_Discharged_FP (completed visits). Fixed, not moved by the Conversion type filter.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Conversions</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Sum of the types picked in the Conversion type filter. Default: appointment clicks, calls, clinic leads.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Revenue</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google conversion value for the types in the Conversion type filter.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Budget</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Monthly planned spend per Region from the budget sheet.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Calculated, always from period totals</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">CTR, CPC, CPM</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Clicks / Impressions, Spend / Clicks, Spend / Impressions x 1,000.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">CPA, CVR, ROAS</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / Conversions, Conversions / Clicks, Revenue / Spend.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Cost per appointment, call, lead</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / that conversion type.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Search impression share</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Impressions / Eligible impressions. Lost IS (rank, budget) and Click share work the same way.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">VTR, Video completion rate</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Video views / Impressions and Video completions / Video views.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Budget spent, projected</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend to date / Budget. Projected = spend to date / days elapsed x days in month.</td></tr><tr><td style="padding:6px 10px;font-weight:600;white-space:nowrap;vertical-align:top;border-bottom:1px solid #E4E6E9;">Deltas</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">% change or absolute change (points for rates). Green is better, red is worse. For CPC and CPA lower is better.</td></tr></table></div>'
     row: 7
     col: 4
     width: 20
