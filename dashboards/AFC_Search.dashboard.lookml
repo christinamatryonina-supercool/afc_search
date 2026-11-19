@@ -142,7 +142,7 @@
   - name: Conversion Type
     title: "Conversion type"
     type: field_filter
-    default_value: "Appointment clicks,Calls,Clinic leads"
+    default_value: ""
     allow_multiple_values: true
     required: false
     model: afc_search
@@ -985,39 +985,6 @@
     width: 20
     height: 2
 
-  - name: exec_kpi_appointments
-    title: "Appointment clicks"
-    tab_name: Executive
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.appointments_cur, american_family_care_search_looker_table.appointments_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account_rollup
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 19
-    col: 4
-    width: 4
-    height: 3
-
   - name: exec_kpi_bookings
     title: "Bookings"
     tab_name: Executive
@@ -1047,8 +1014,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 19
-    col: 8
-    width: 4
+    col: 4
+    width: 5
     height: 3
 
   - name: exec_kpi_discharged_patients
@@ -1080,8 +1047,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 19
-    col: 12
-    width: 4
+    col: 9
+    width: 5
     height: 3
 
   - name: exec_kpi_calls
@@ -1113,17 +1080,17 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 19
-    col: 16
-    width: 4
+    col: 14
+    width: 5
     height: 3
 
-  - name: exec_kpi_clinic_leads
-    title: "Clinic leads"
+  - name: exec_kpi_booking_to_visit_rate
+    title: "Booking to visit rate"
     tab_name: Executive
     model: afc_search
     explore: american_family_care_search_looker_table
     type: single_value
-    fields: [american_family_care_search_looker_table.clinic_leads_cur, american_family_care_search_looker_table.clinic_leads_pop]
+    fields: [american_family_care_search_looker_table.booking_to_visit_rate_cur, american_family_care_search_looker_table.booking_to_visit_rate_pop]
     filters:
       american_family_care_search_looker_table.in_cmp_scope: "Yes"
     limit: 1
@@ -1146,41 +1113,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 19
-    col: 20
-    width: 4
-    height: 3
-
-  - name: exec_kpi_cost_per_appointment
-    title: "Cost per appointment click"
-    tab_name: Executive
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.cost_per_appointment_cur, american_family_care_search_looker_table.cost_per_appointment_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account_rollup
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 22
-    col: 4
-    width: 4
+    col: 19
+    width: 5
     height: 3
 
   - name: exec_kpi_cost_per_booking
@@ -1212,8 +1146,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 22
-    col: 8
-    width: 4
+    col: 4
+    width: 5
     height: 3
 
   - name: exec_kpi_cost_per_discharged_patient
@@ -1245,8 +1179,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 22
-    col: 12
-    width: 4
+    col: 9
+    width: 5
     height: 3
 
   - name: exec_kpi_cost_per_call
@@ -1278,17 +1212,17 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 22
-    col: 16
-    width: 4
+    col: 14
+    width: 5
     height: 3
 
-  - name: exec_kpi_cost_per_lead
-    title: "Cost per lead"
+  - name: exec_kpi_cpa_by_type
+    title: "CPA"
     tab_name: Executive
     model: afc_search
     explore: american_family_care_search_looker_table
     type: single_value
-    fields: [american_family_care_search_looker_table.cost_per_lead_cur, american_family_care_search_looker_table.cost_per_lead_pop]
+    fields: [american_family_care_search_looker_table.cpa_cur, american_family_care_search_looker_table.cpa_pop]
     filters:
       american_family_care_search_looker_table.in_cmp_scope: "Yes"
     limit: 1
@@ -1311,8 +1245,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 22
-    col: 20
-    width: 4
+    col: 19
+    width: 5
     height: 3
 
   - name: exec_band_coverage
@@ -1902,39 +1836,6 @@
     width: 20
     height: 2
 
-  - name: conv_kpi_appointments
-    title: "Appointment clicks"
-    tab_name: Conversion
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.appointments_cur, american_family_care_search_looker_table.appointments_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account_rollup
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 7
-    col: 4
-    width: 4
-    height: 3
-
   - name: conv_kpi_bookings
     title: "Bookings"
     tab_name: Conversion
@@ -1964,8 +1865,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 7
-    col: 8
-    width: 4
+    col: 4
+    width: 5
     height: 3
 
   - name: conv_kpi_discharged_patients
@@ -1997,8 +1898,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 7
-    col: 12
-    width: 4
+    col: 9
+    width: 5
     height: 3
 
   - name: conv_kpi_calls
@@ -2030,17 +1931,17 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 7
-    col: 16
-    width: 4
+    col: 14
+    width: 5
     height: 3
 
-  - name: conv_kpi_clinic_leads
-    title: "Clinic leads"
+  - name: conv_kpi_all_conversions
+    title: "All conversions"
     tab_name: Conversion
     model: afc_search
     explore: american_family_care_search_looker_table
     type: single_value
-    fields: [american_family_care_search_looker_table.clinic_leads_cur, american_family_care_search_looker_table.clinic_leads_pop]
+    fields: [american_family_care_search_looker_table.all_conversions_cur, american_family_care_search_looker_table.all_conversions_pop]
     filters:
       american_family_care_search_looker_table.in_cmp_scope: "Yes"
     limit: 1
@@ -2063,41 +1964,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 7
-    col: 20
-    width: 4
-    height: 3
-
-  - name: conv_kpi_cost_per_appointment
-    title: "Cost per appointment click"
-    tab_name: Conversion
-    model: afc_search
-    explore: american_family_care_search_looker_table
-    type: single_value
-    fields: [american_family_care_search_looker_table.cost_per_appointment_cur, american_family_care_search_looker_table.cost_per_appointment_pop]
-    filters:
-      american_family_care_search_looker_table.in_cmp_scope: "Yes"
-    limit: 1
-    show_view_names: false
-    custom_color_enabled: true
-    show_single_value_title: true
-    show_comparison: true
-    comparison_type: value
-    show_comparison_label: true
-    comparison_label: "vs PP"
-    enable_conditional_formatting: false
-    listen:
-      Date Range: american_family_care_search_looker_table.date_range
-      Region: american_family_care_search_looker_table.region
-      Account: american_family_care_search_looker_table.account_rollup
-      Condition: american_family_care_search_looker_table.condition
-      Budget Group: american_family_care_search_looker_table.budget_group
-      Mapping Channel: american_family_care_search_looker_table.mapping_channel
-      Channel: american_family_care_search_looker_table.channel
-      Conversion Type: american_family_care_search_looker_table.conversion_actions
-      KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 10
-    col: 4
-    width: 4
+    col: 19
+    width: 5
     height: 3
 
   - name: conv_kpi_cost_per_booking
@@ -2129,8 +1997,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 10
-    col: 8
-    width: 4
+    col: 4
+    width: 5
     height: 3
 
   - name: conv_kpi_cost_per_discharged_patient
@@ -2162,8 +2030,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 10
-    col: 12
-    width: 4
+    col: 9
+    width: 5
     height: 3
 
   - name: conv_kpi_cost_per_call
@@ -2195,17 +2063,17 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 10
-    col: 16
-    width: 4
+    col: 14
+    width: 5
     height: 3
 
-  - name: conv_kpi_cost_per_lead
-    title: "Cost per lead"
+  - name: conv_kpi_total_revenue
+    title: "Revenue"
     tab_name: Conversion
     model: afc_search
     explore: american_family_care_search_looker_table
     type: single_value
-    fields: [american_family_care_search_looker_table.cost_per_lead_cur, american_family_care_search_looker_table.cost_per_lead_pop]
+    fields: [american_family_care_search_looker_table.total_revenue_cur, american_family_care_search_looker_table.total_revenue_pop]
     filters:
       american_family_care_search_looker_table.in_cmp_scope: "Yes"
     limit: 1
@@ -2228,8 +2096,8 @@
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
     row: 10
-    col: 20
-    width: 4
+    col: 19
+    width: 5
     height: 3
 
   - name: Conv Granularity
@@ -3939,7 +3807,7 @@
     type: text
     title_text: ""
     tab_name: Dictionary
-    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:13px;color:#262D33;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Field reference</div><table style="border-collapse:collapse;width:100%;"><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Dimensions</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Date, Day, Week, Month, Year</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Calendar date of the activity. Weeks run Monday to Sunday and are labelled with the ISO week of the Monday.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Account</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Corporate NE (AFC Corporate New England) and Corporate SE (AFC Corporate Clinics). Corp-managed Ad.Works will be added once its accounts are connected.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Region</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">NE or SE from the mapping sheet. Budget is matched on it.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Campaign type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google campaign type (Search, Performance Max).</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Keyword type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Brand, NonBrand or PMax from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Condition, Budget group, Account group</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">AFC campaign groupings from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Market (inferred)</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Read from the metro code or clinic town in the campaign name.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Conversion type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Picks which conversion families count as Conversions. Moves Conversions, CPA, CVR, Revenue and ROAS only; spend and traffic never change with it.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Measures</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Spend, Impressions, Clicks</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">From Google Ads. Spend in dollars.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Bookings</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Bookings created (Booking_Created_FP, FP - Appointment Booked). Tracked since August 2026.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Discharged patients</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Patients discharged after a visit (Booking_Discharged_FP, Discharged Patient): the closest signal to a completed visit. Tracked since August 2026.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Calls</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Clicks to call, calls from ads, website phone calls and call leads.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Appointment clicks</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Clicks on Schedule appointment (GA4 and FP). Not recorded since mid-September 2026.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Clinic leads</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Per-clinic &quot;Leads (clinic ID) - Town&quot; actions. Not recorded since mid-September 2026 (NE since August 2026).</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Conversions</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Sum of the families picked in the Conversion type filter. Default: appointment clicks, calls, clinic leads (to be confirmed now that bookings tracking replaced appointment clicks and clinic leads).</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Revenue</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google conversion value for the families in the Conversion type filter.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Budget</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Monthly planned spend per Region from the budget sheet.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Calculated, always from period totals</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">CTR, CPC</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Clicks / Impressions, Spend / Clicks.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">CPA, CVR, ROAS</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / Conversions, Conversions / Clicks, Revenue / Spend.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Cost per booking, discharged patient, call</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / that conversion family (same for appointment clicks and clinic leads).</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Booking to visit rate</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Discharged patients / Bookings: the share of bookings that became a visit.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Search impression share</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Impressions / Eligible impressions. Lost IS (rank) and Lost IS (budget) = lost eligible impressions / eligible impressions. Click share = Clicks / Eligible clicks.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Budget spent, projected</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend to date / Budget. Projected = spend to date / days elapsed x days in month.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Deltas</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">% change or absolute change (points for rates) vs the previous period or the previous row. Green is better, red is worse; for CPC and CPA lower is better.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Notes</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Tracking change</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Conversion tracking changed in August to September 2026 (from appointment clicks and clinic leads to FP bookings), so comparisons across those months are not like for like.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Year over year</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Same period last year fills in once the data covers last year (history starts January 2026).</td></tr></table></div>'
+    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:13px;color:#262D33;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Field reference</div><table style="border-collapse:collapse;width:100%;"><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Dimensions</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Date, Day, Week, Month, Year</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Calendar date of the activity. Weeks run Monday to Sunday and are labelled with the ISO week of the Monday.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Account</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Corporate NE (AFC Corporate New England) and Corporate SE (AFC Corporate Clinics). Corp-managed Ad.Works will be added once its accounts are connected.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Region</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">NE or SE from the mapping sheet. Budget is matched on it.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Campaign type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google campaign type (Search, Performance Max).</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Keyword type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Brand, NonBrand or PMax from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Condition, Budget group, Account group</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">AFC campaign groupings from the mapping sheet.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Market (inferred)</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Read from the metro code or clinic town in the campaign name.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Conversion type</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Narrows Conversions to specific families (empty = all primary conversions). Moves Conversions, CPA, CVR, Revenue and ROAS only; spend and traffic never change with it.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Measures</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Spend, Impressions, Clicks</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">From Google Ads. Spend in dollars.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Bookings</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Bookings created (Booking_Created_FP, FP - Appointment Booked). Tracked since August 2026.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Discharged patients</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Patients discharged after a visit (Booking_Discharged_FP, Discharged Patient): the closest signal to a completed visit. Tracked since August 2026.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Calls</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Clicks to call, calls from ads, website phone calls and call leads.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Appointment clicks</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Clicks on Schedule appointment (GA4 and FP). Not recorded since mid-September 2026.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Clinic leads</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Per-clinic &quot;Leads (clinic ID) - Town&quot; actions. Not recorded since mid-September 2026 (NE since August 2026).</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Conversions</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google Ads default Conversions column: only the primary actions each campaign was bidding toward at the time, so it matches the Google Ads UI. The Conversion type filter can narrow it to specific families.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Revenue</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Google Ads conversion value of those primary conversions.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">All conversions</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Every conversion action, primary and secondary. The breakdown by type (Bookings, Discharged patients, Calls) is based on it.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Budget</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Monthly planned spend per Region from the budget sheet.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Calculated, always from period totals</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">CTR, CPC</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Clicks / Impressions, Spend / Clicks.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">CPA, CVR, ROAS</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / Conversions, Conversions / Clicks, Revenue / Spend.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Cost per booking, discharged patient, call</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend / that conversion family (same for appointment clicks and clinic leads).</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Booking to visit rate</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Discharged patients / Bookings: the share of bookings that became a visit.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Search impression share</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Impressions / Eligible impressions. Lost IS (rank) and Lost IS (budget) = lost eligible impressions / eligible impressions. Click share = Clicks / Eligible clicks.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Budget spent, projected</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Spend to date / Budget. Projected = spend to date / days elapsed x days in month.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Deltas</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">% change or absolute change (points for rates) vs the previous period or the previous row. Green is better, red is worse; for CPC and CPA lower is better.</td></tr><tr><td colspan="2" style="background:#F6F7F9;font-weight:700;color:#5F6368;padding:6px 10px;">Notes</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Tracking change</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Conversion tracking changed in August to September 2026 (from appointment clicks and clinic leads to FP bookings), so comparisons across those months are not like for like.</td></tr><tr><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;font-weight:600;white-space:nowrap;vertical-align:top;">Year over year</td><td style="padding:6px 10px;border-bottom:1px solid #E4E6E9;">Same period last year fills in once the data covers last year (history starts January 2026).</td></tr></table></div>'
     row: 7
     col: 4
     width: 20
@@ -3949,7 +3817,7 @@
     type: text
     title_text: ""
     tab_name: Dictionary
-    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:13px;color:#262D33;padding:0 10px;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Decisions we need from AFC</div><ol style="padding-left:18px;margin:0;"><li style="margin:0 0 8px;"><b>Conversion tracking change</b><br><span style="color:#5F6368;">Schedule appointment clicks and clinic leads stopped recording around mid-September 2026; Booking_Created_FP and Booking_Discharged_FP started in August. Please confirm the switch was intentional and the cutover date.</span></li><li style="margin:0 0 8px;"><b>What counts as a conversion</b><br><span style="color:#5F6368;">Should Conversions (and CPA, CVR) now be Bookings + Calls? The current default, appointment clicks + calls + clinic leads, is effectively calls only since October.</span></li><li style="margin:0 0 8px;"><b>Booking tracking in NE</b><br><span style="color:#5F6368;">NE clinic leads stopped after July. Is booking tracking set up for the NE clinics?</span></li><li style="margin:0 0 8px;"><b>Ad.Works accounts</b><br><span style="color:#5F6368;">Which Corp-managed Ad.Works accounts should be connected, and their account IDs, so Ad.Works can be added to the Account filter.</span></li><li style="margin:0 0 8px;"><b>Clinic and franchisee reporting</b><br><span style="color:#5F6368;">How clinic and franchise accounts should be grouped beyond Corporate NE, Corporate SE and Ad.Works.</span></li><li style="margin:0 0 8px;"><b>Conversion values</b><br><span style="color:#5F6368;">Are Google Ads conversion values real revenue? If not, ROAS will be labelled indicative or hidden.</span></li><li style="margin:0 0 8px;"><b>Mapping ownership</b><br><span style="color:#5F6368;">Who at AFC adds new campaigns to the mapping sheet when they launch, so they don''t show as Unmapped?</span></li></ol></div>'
+    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:13px;color:#262D33;padding:0 10px;"><div style="font-size:15px;text-align:center;margin-bottom:6px;">Decisions we need from AFC</div><ol style="padding-left:18px;margin:0;"><li style="margin:0 0 8px;"><b>Ad.Works accounts</b><br><span style="color:#5F6368;">Which Corp-managed Ad.Works accounts should be connected, and their account IDs, so Ad.Works can be added to the Account filter.</span></li><li style="margin:0 0 8px;"><b>Clinic and franchisee reporting</b><br><span style="color:#5F6368;">How clinic and franchise accounts should be grouped beyond Corporate NE, Corporate SE and Ad.Works.</span></li><li style="margin:0 0 8px;"><b>Conversion values</b><br><span style="color:#5F6368;">Are Google Ads conversion values real revenue? If not, ROAS will be labelled indicative or hidden.</span></li><li style="margin:0 0 8px;"><b>Mapping ownership</b><br><span style="color:#5F6368;">Who at AFC adds new campaigns to the mapping sheet when they launch, so they don''t show as Unmapped?</span></li></ol></div>'
     row: 21
     col: 4
     width: 20

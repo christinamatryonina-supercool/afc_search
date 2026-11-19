@@ -300,7 +300,7 @@ view: american_family_care_search_looker_table {
   filter: conversion_actions {
     group_label: "Conversion"
     label: "Conversion actions"
-    description: "Which action families count as Engine conversions. Empty = default definition: appointment clicks, calls and clinic leads."
+    description: "Which action families count as Engine conversions. Empty = all primary conversions (Google Ads default Conversions column)."
     type: string
     suggestions: ["Appointment clicks", "Bookings", "Discharged patients", "Calls", "Clinic leads", "Directions", "Site engagement", "Other"]
   }
@@ -312,7 +312,7 @@ view: american_family_care_search_looker_table {
     sql: {% if conversion_actions._is_filtered %}
            {% condition conversion_actions %} ${conversion_family} {% endcondition %}
          {% else %}
-           ${conversion_family} IN ('Appointment clicks', 'Calls', 'Clinic leads')
+           TRUE
          {% endif %} ;;
   }
 
@@ -363,6 +363,8 @@ view: american_family_care_search_looker_table {
   dimension: viewthrough_conversions { type: number sql: ${TABLE}."View-through_Conversions" ;; hidden: yes }
   dimension: total_conversions { type: number sql: ${TABLE}."Total_Conversions" ;; hidden: yes }
   dimension: revenue { type: number sql: ${TABLE}."Revenue" ;; hidden: yes }
+  dimension: primary_conversions { type: number sql: ${TABLE}."Primary_Conversions" ;; hidden: yes }
+  dimension: primary_revenue { type: number sql: ${TABLE}."Primary_Revenue" ;; hidden: yes }
   dimension: budget { type: number sql: ${TABLE}."Budget" ;; hidden: yes }
   measure: count { hidden: yes type: count }
 
@@ -724,9 +726,9 @@ view: american_family_care_search_looker_table {
   measure: engine_conversions {
     group_label: "Conversions"
     label: "Engine conversions"
-    description: "Conversions from the actions in the current definition (Conversion actions filter; defaults to appointments, calls and clinic leads). Cost rows are never removed by this filter."
+    description: "Google Ads default Conversions column: only the primary actions each campaign was bidding toward at the time. Matches the Google Ads UI. The Conversion type filter can narrow it to specific families."
     type: sum
-    sql: ZEROIFNULL(${total_conversions}) ;;
+    sql: ZEROIFNULL(${primary_conversions}) ;;
     filters: [conversion_in_definition: "yes"]
     value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
     drill_fields: [drill_campaign*]
@@ -748,7 +750,7 @@ view: american_family_care_search_looker_table {
   measure: all_conversions {
     group_label: "Conversions"
     label: "All conversion actions"
-    description: "Every Google Ads conversion action, blended. For reference only."
+    description: "Google Ads All conversions: every conversion action, primary and secondary (page views, local actions, directions...). Secondary metric; the type breakdown (Bookings, Calls, Discharged patients) is based on it."
     type: sum
     sql: ZEROIFNULL(${total_conversions}) ;;
     value_format: "[>=1000000]0.00,,\"M\";[>=1000]0.0,\"K\";#,##0"
@@ -1007,9 +1009,9 @@ view: american_family_care_search_looker_table {
   measure: total_revenue {
     group_label: "Value"
     label: "Revenue"
-    description: "Google conversion value for the actions in the current definition."
+    description: "Google Ads conversion value of the primary conversions (default Conversions column)."
     type: sum
-    sql: ZEROIFNULL(${revenue}) ;;
+    sql: ZEROIFNULL(${primary_revenue}) ;;
     filters: [conversion_in_definition: "yes"]
     value_format: "[>=1000000]$0.00,,\"M\";[>=1000]$0.0,\"K\";$#,##0"
     drill_fields: [drill_campaign*]
@@ -1611,8 +1613,8 @@ view: american_family_care_search_looker_table {
   measure: total_impressions_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${impressions}) ;; filters: [in_cmp_prior: "yes"] }
   measure: total_clicks_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${clicks}) ;; filters: [in_cmp_current: "yes"] }
   measure: total_clicks_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${clicks}) ;; filters: [in_cmp_prior: "yes"] }
-  measure: engine_conversions_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_current: "yes", conversion_in_definition: "yes"] }
-  measure: engine_conversions_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_prior: "yes", conversion_in_definition: "yes"] }
+  measure: engine_conversions_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${primary_conversions}) ;; filters: [in_cmp_current: "yes", conversion_in_definition: "yes"] }
+  measure: engine_conversions_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${primary_conversions}) ;; filters: [in_cmp_prior: "yes", conversion_in_definition: "yes"] }
   measure: all_conversions_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_current: "yes"] }
   measure: all_conversions_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_prior: "yes"] }
   measure: appointments_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${total_conversions}) ;; filters: [in_cmp_current: "yes", conversion_family: "Appointment clicks"] }
@@ -1625,8 +1627,8 @@ view: american_family_care_search_looker_table {
   measure: total_clickthrough_conversions_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${clickthrough_conversions}) ;; filters: [in_cmp_prior: "yes"] }
   measure: total_viewthrough_conversions_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${viewthrough_conversions}) ;; filters: [in_cmp_current: "yes"] }
   measure: total_viewthrough_conversions_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${viewthrough_conversions}) ;; filters: [in_cmp_prior: "yes"] }
-  measure: total_revenue_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${revenue}) ;; filters: [in_cmp_current: "yes", conversion_in_definition: "yes"] }
-  measure: total_revenue_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${revenue}) ;; filters: [in_cmp_prior: "yes", conversion_in_definition: "yes"] }
+  measure: total_revenue_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${primary_revenue}) ;; filters: [in_cmp_current: "yes", conversion_in_definition: "yes"] }
+  measure: total_revenue_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${primary_revenue}) ;; filters: [in_cmp_prior: "yes", conversion_in_definition: "yes"] }
   measure: revenue_all_actions_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${revenue}) ;; filters: [in_cmp_current: "yes"] }
   measure: revenue_all_actions_prior_sum { hidden: yes type: sum sql: ZEROIFNULL(${revenue}) ;; filters: [in_cmp_prior: "yes"] }
   measure: total_video_views_cur_sum   { hidden: yes type: sum sql: ZEROIFNULL(${video_views}) ;; filters: [in_cmp_current: "yes"] }
