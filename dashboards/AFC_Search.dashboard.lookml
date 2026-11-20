@@ -35,6 +35,8 @@
     label: "Competition"
   - name: Operations
     label: "Operations"
+  - name: AdWorks
+    label: "Ad.Works"
   - name: Dictionary
     label: "Data dictionary"
 
@@ -252,6 +254,34 @@
       display: overflow
 
   - name: Ops Granularity
+    title: "Granularity"
+    type: field_filter
+    default_value: "day"
+    allow_multiple_values: false
+    required: true
+    model: afc_search
+    explore: american_family_care_search_looker_table
+    listens_to_filters: []
+    field: american_family_care_search_looker_table.date_granularity
+    ui_config:
+      type: dropdown_menu
+      display: overflow
+
+  - name: AW Granularity
+    title: "Granularity"
+    type: field_filter
+    default_value: "week"
+    allow_multiple_values: false
+    required: true
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    listens_to_filters: []
+    field: american_family_care_ad_works_looker_table.date_granularity
+    ui_config:
+      type: dropdown_menu
+      display: overflow
+
+  - name: Exec Granularity
     title: "Granularity"
     type: field_filter
     default_value: "day"
@@ -531,6 +561,48 @@
   # ===========================================================================
   # Elements
   # ===========================================================================
+  - name: AW Franchisee
+    title: "Franchisee"
+    type: field_filter
+    default_value: ""
+    allow_multiple_values: true
+    required: false
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    listens_to_filters: []
+    field: american_family_care_ad_works_looker_table.franchisee
+    ui_config:
+      type: dropdown_menu
+      display: overflow
+
+  - name: AW Account
+    title: "Account"
+    type: field_filter
+    default_value: ""
+    allow_multiple_values: true
+    required: false
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    listens_to_filters: []
+    field: american_family_care_ad_works_looker_table.account
+    ui_config:
+      type: dropdown_menu
+      display: overflow
+
+  - name: AW State
+    title: "State"
+    type: field_filter
+    default_value: ""
+    allow_multiple_values: true
+    required: false
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    listens_to_filters: []
+    field: american_family_care_ad_works_looker_table.state
+    ui_config:
+      type: dropdown_menu
+      display: overflow
+
   elements:
 
   # ------------------------------------------------------------ TAB: Executive
@@ -590,11 +662,20 @@
     width: 4
     height: 1
 
+  - name: nav_exec_aw
+    type: button
+    tab_name: Executive
+    rich_content_json: '{"text": "Ad.Works","description": "Ad.Works","href": "","targetTabName": "AdWorks","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 8
+    col: 0
+    width: 4
+    height: 1
+
   - name: nav_exec_6
     type: button
     tab_name: Executive
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 8
+    row: 9
     col: 0
     width: 4
     height: 1
@@ -939,14 +1020,25 @@
     width: 4
     height: 3
 
+  - name: Exec Granularity
+    type: filter
+    tab_name: Executive
+    row: 8
+    col: 4
+    width: 6
+    height: 1
+    ui_config:
+      type: dropdown_menu
+      display: overflow
+
   - name: exec_trend_spend_conversions
-    title: "Spend vs conversions by day"
+    title: "Spend vs conversions over time"
     tab_name: Executive
     model: afc_search
     explore: american_family_care_search_looker_table
     type: looker_column
-    fields: [american_family_care_search_looker_table.date_date, american_family_care_search_looker_table.total_cost, american_family_care_search_looker_table.engine_conversions]
-    sorts: [american_family_care_search_looker_table.date_date]
+    fields: [american_family_care_search_looker_table.dynamic_date, american_family_care_search_looker_table.total_cost, american_family_care_search_looker_table.engine_conversions]
+    sorts: [american_family_care_search_looker_table.dynamic_date]
     limit: 500
     show_view_names: false
     series_types:
@@ -962,6 +1054,7 @@
     legend_position: center
     point_style: none
     listen:
+      Exec Granularity: american_family_care_search_looker_table.date_granularity
       Date Range: american_family_care_search_looker_table.date_date
       Region: american_family_care_search_looker_table.region
       Account: american_family_care_search_looker_table.account_rollup
@@ -970,7 +1063,7 @@
       Mapping Channel: american_family_care_search_looker_table.mapping_channel
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
-    row: 8
+    row: 9
     col: 4
     width: 20
     height: 9
@@ -980,7 +1073,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Conversions by type</span></div>'
-    row: 17
+    row: 18
     col: 4
     width: 20
     height: 2
@@ -1013,7 +1106,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 19
+    row: 20
     col: 4
     width: 5
     height: 3
@@ -1046,7 +1139,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 19
+    row: 20
     col: 9
     width: 5
     height: 3
@@ -1079,7 +1172,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 19
+    row: 20
     col: 14
     width: 5
     height: 3
@@ -1112,7 +1205,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 19
+    row: 20
     col: 19
     width: 5
     height: 3
@@ -1145,7 +1238,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 22
+    row: 23
     col: 4
     width: 5
     height: 3
@@ -1178,7 +1271,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 22
+    row: 23
     col: 9
     width: 5
     height: 3
@@ -1211,7 +1304,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 22
+    row: 23
     col: 14
     width: 5
     height: 3
@@ -1244,7 +1337,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 22
+    row: 23
     col: 19
     width: 5
     height: 3
@@ -1254,7 +1347,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Coverage</span></div>'
-    row: 25
+    row: 26
     col: 4
     width: 20
     height: 2
@@ -1287,7 +1380,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 27
+    row: 28
     col: 4
     width: 5
     height: 3
@@ -1320,7 +1413,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 27
+    row: 28
     col: 9
     width: 5
     height: 3
@@ -1353,7 +1446,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 27
+    row: 28
     col: 14
     width: 5
     height: 3
@@ -1386,7 +1479,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       KPI Comparison: american_family_care_search_looker_table.comparison_mode
-    row: 27
+    row: 28
     col: 19
     width: 5
     height: 3
@@ -1396,7 +1489,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Day over day</span></div>'
-    row: 30
+    row: 31
     col: 4
     width: 20
     height: 2
@@ -1404,7 +1497,7 @@
   - name: DoD Delta Format
     type: filter
     tab_name: Executive
-    row: 32
+    row: 33
     col: 4
     width: 6
     height: 1
@@ -1417,7 +1510,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a day with the day before it. Compare period with (filter bar) sets the vs PP on every tab.</div>'
-    row: 32
+    row: 33
     col: 10
     width: 14
     height: 1
@@ -1450,7 +1543,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       DoD Delta Format: american_family_care_search_looker_table.delta_format
-    row: 33
+    row: 34
     col: 4
     width: 20
     height: 12
@@ -1460,7 +1553,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Week over week</span></div>'
-    row: 45
+    row: 46
     col: 4
     width: 20
     height: 2
@@ -1468,7 +1561,7 @@
   - name: WoW Delta Format
     type: filter
     tab_name: Executive
-    row: 47
+    row: 48
     col: 4
     width: 6
     height: 1
@@ -1481,7 +1574,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a week with the week before it. Weeks run Monday to Sunday. Green is better, red is worse.</div>'
-    row: 47
+    row: 48
     col: 10
     width: 14
     height: 1
@@ -1515,7 +1608,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       WoW Delta Format: american_family_care_search_looker_table.delta_format
-    row: 48
+    row: 49
     col: 4
     width: 20
     height: 9
@@ -1525,7 +1618,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Month over month</span></div>'
-    row: 57
+    row: 58
     col: 4
     width: 20
     height: 2
@@ -1533,7 +1626,7 @@
   - name: MoM Delta Format
     type: filter
     tab_name: Executive
-    row: 59
+    row: 60
     col: 4
     width: 6
     height: 1
@@ -1546,7 +1639,7 @@
     title_text: ""
     tab_name: Executive
     body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12px;color:#5F6368;padding:6px 4px;">Each Δ column compares a month with the month before it. Green is better, red is worse.</div>'
-    row: 59
+    row: 60
     col: 10
     width: 14
     height: 1
@@ -1580,7 +1673,7 @@
       Channel: american_family_care_search_looker_table.channel
       Conversion Type: american_family_care_search_looker_table.conversion_actions
       MoM Delta Format: american_family_care_search_looker_table.delta_format
-    row: 60
+    row: 61
     col: 4
     width: 20
     height: 9
@@ -1642,11 +1735,20 @@
     width: 4
     height: 1
 
+  - name: nav_conv_aw
+    type: button
+    tab_name: Conversion
+    rich_content_json: '{"text": "Ad.Works","description": "Ad.Works","href": "","targetTabName": "AdWorks","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 8
+    col: 0
+    width: 4
+    height: 1
+
   - name: nav_conv_6
     type: button
     tab_name: Conversion
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 8
+    row: 9
     col: 0
     width: 4
     height: 1
@@ -2462,11 +2564,20 @@
     width: 4
     height: 1
 
+  - name: nav_traf_aw
+    type: button
+    tab_name: Traffic
+    rich_content_json: '{"text": "Ad.Works","description": "Ad.Works","href": "","targetTabName": "AdWorks","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 8
+    col: 0
+    width: 4
+    height: 1
+
   - name: nav_traf_6
     type: button
     tab_name: Traffic
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 8
+    row: 9
     col: 0
     width: 4
     height: 1
@@ -2879,11 +2990,20 @@
     width: 4
     height: 1
 
+  - name: nav_comp_aw
+    type: button
+    tab_name: Competition
+    rich_content_json: '{"text": "Ad.Works","description": "Ad.Works","href": "","targetTabName": "AdWorks","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 8
+    col: 0
+    width: 4
+    height: 1
+
   - name: nav_comp_6
     type: button
     tab_name: Competition
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 8
+    row: 9
     col: 0
     width: 4
     height: 1
@@ -3201,11 +3321,20 @@
     width: 4
     height: 1
 
+  - name: nav_ops_aw
+    type: button
+    tab_name: Operations
+    rich_content_json: '{"text": "Ad.Works","description": "Ad.Works","href": "","targetTabName": "AdWorks","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 8
+    col: 0
+    width: 4
+    height: 1
+
   - name: nav_ops_6
     type: button
     tab_name: Operations
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
-    row: 8
+    row: 9
     col: 0
     width: 4
     height: 1
@@ -3774,11 +3903,20 @@
     width: 4
     height: 1
 
+  - name: nav_dict_aw
+    type: button
+    tab_name: Dictionary
+    rich_content_json: '{"text": "Ad.Works","description": "Ad.Works","href": "","targetTabName": "AdWorks","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 8
+    col: 0
+    width: 4
+    height: 1
+
   - name: nav_dict_6
     type: button
     tab_name: Dictionary
     rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "FILLED","color": "#E31837"}'
-    row: 8
+    row: 9
     col: 0
     width: 4
     height: 1
@@ -3821,4 +3959,686 @@
     row: 21
     col: 4
     width: 20
+    height: 8
+
+  # ----------------------------------------------------------- TAB: Ad.Works (franchise, separate explore)
+
+  - name: nav_aw_logo
+    type: text
+    title_text: ""
+    tab_name: AdWorks
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:100%;background:white;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSupnctT7R2nepOPV75YiJnMRQoW1shpvpmHDgc6iDXK5pw9iJhv-NuReI&s=10" style="height:110px;width:auto;display:block;" /></div>'
+    row: 0
+    col: 0
+    width: 4
+    height: 3
+
+  - name: nav_aw_1
+    type: button
+    tab_name: AdWorks
+    rich_content_json: '{"text": "Executive overview","description": "Executive overview","href": "","targetTabName": "Executive","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 3
+    col: 0
+    width: 4
+    height: 1
+
+  - name: nav_aw_2
+    type: button
+    tab_name: AdWorks
+    rich_content_json: '{"text": "Conversion","description": "Conversion","href": "","targetTabName": "Conversion","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 4
+    col: 0
+    width: 4
+    height: 1
+
+  - name: nav_aw_3
+    type: button
+    tab_name: AdWorks
+    rich_content_json: '{"text": "Traffic","description": "Traffic","href": "","targetTabName": "Traffic","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 5
+    col: 0
+    width: 4
+    height: 1
+
+  - name: nav_aw_4
+    type: button
+    tab_name: AdWorks
+    rich_content_json: '{"text": "Competition","description": "Competition","href": "","targetTabName": "Competition","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 6
+    col: 0
+    width: 4
+    height: 1
+
+  - name: nav_aw_5
+    type: button
+    tab_name: AdWorks
+    rich_content_json: '{"text": "Operations","description": "Operations","href": "","targetTabName": "Operations","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 7
+    col: 0
+    width: 4
+    height: 1
+
+  - name: nav_aw_6
+    type: button
+    tab_name: AdWorks
+    rich_content_json: '{"text": "Ad.Works","description": "Ad.Works","href": "","targetTabName": "AdWorks","newTab": false,"alignment": "left","size": "medium","style": "FILLED","color": "#E31837"}'
+    row: 8
+    col: 0
+    width: 4
+    height: 1
+
+  - name: nav_aw_7
+    type: button
+    tab_name: AdWorks
+    rich_content_json: '{"text": "Data dictionary","description": "Data dictionary","href": "","targetTabName": "Dictionary","newTab": false,"alignment": "left","size": "medium","style": "TRANSPARENT","color": "#3C4043"}'
+    row: 9
+    col: 0
+    width: 4
+    height: 1
+
+  - name: aw_band_overview
+    type: text
+    title_text: ""
+    tab_name: AdWorks
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Ad.Works franchise accounts</span></div>'
+    row: 0
+    col: 4
+    width: 20
+    height: 2
+
+  - name: aw_note
+    type: text
+    title_text: ""
+    tab_name: AdWorks
+    body_text: '<div style="font-family:''Google Sans'',Roboto,Arial,sans-serif;font-size:12.5px;color:#5F6368;padding:6px 4px;">Franchise accounts, not managed by DEPT. Corporate filters in the bar don''t apply here: use the filters below.</div>'
+    row: 2
+    col: 4
+    width: 20
+    height: 1
+
+  - name: AW Franchisee
+    type: filter
+    tab_name: AdWorks
+    row: 3
+    col: 4
+    width: 6
+    height: 1
+    ui_config:
+      type: dropdown_menu
+      display: overflow
+
+  - name: AW Account
+    type: filter
+    tab_name: AdWorks
+    row: 3
+    col: 10
+    width: 7
+    height: 1
+    ui_config:
+      type: dropdown_menu
+      display: overflow
+
+  - name: AW State
+    type: filter
+    tab_name: AdWorks
+    row: 3
+    col: 17
+    width: 7
+    height: 1
+    ui_config:
+      type: dropdown_menu
+      display: overflow
+
+  - name: aw_kpi_total_cost
+    title: "Spend"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: single_value
+    fields: [american_family_care_ad_works_looker_table.total_cost_cur, american_family_care_ad_works_looker_table.total_cost_pop]
+    filters:
+      american_family_care_ad_works_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_range
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+      KPI Comparison: american_family_care_ad_works_looker_table.comparison_mode
+    row: 4
+    col: 4
+    width: 4
+    height: 3
+
+  - name: aw_kpi_total_clicks
+    title: "Clicks"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: single_value
+    fields: [american_family_care_ad_works_looker_table.total_clicks_cur, american_family_care_ad_works_looker_table.total_clicks_pop]
+    filters:
+      american_family_care_ad_works_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_range
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+      KPI Comparison: american_family_care_ad_works_looker_table.comparison_mode
+    row: 4
+    col: 8
+    width: 4
+    height: 3
+
+  - name: aw_kpi_ctr
+    title: "CTR"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: single_value
+    fields: [american_family_care_ad_works_looker_table.ctr_cur, american_family_care_ad_works_looker_table.ctr_pop]
+    filters:
+      american_family_care_ad_works_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_range
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+      KPI Comparison: american_family_care_ad_works_looker_table.comparison_mode
+    row: 4
+    col: 12
+    width: 4
+    height: 3
+
+  - name: aw_kpi_cpc
+    title: "CPC"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: single_value
+    fields: [american_family_care_ad_works_looker_table.cpc_cur, american_family_care_ad_works_looker_table.cpc_pop]
+    filters:
+      american_family_care_ad_works_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_range
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+      KPI Comparison: american_family_care_ad_works_looker_table.comparison_mode
+    row: 4
+    col: 16
+    width: 4
+    height: 3
+
+  - name: aw_kpi_total_impressions
+    title: "Impressions"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: single_value
+    fields: [american_family_care_ad_works_looker_table.total_impressions_cur, american_family_care_ad_works_looker_table.total_impressions_pop]
+    filters:
+      american_family_care_ad_works_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_range
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+      KPI Comparison: american_family_care_ad_works_looker_table.comparison_mode
+    row: 4
+    col: 20
+    width: 4
+    height: 3
+
+  - name: aw_kpi_engine_conversions
+    title: "Conversions"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: single_value
+    fields: [american_family_care_ad_works_looker_table.engine_conversions_cur, american_family_care_ad_works_looker_table.engine_conversions_pop]
+    filters:
+      american_family_care_ad_works_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_range
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+      KPI Comparison: american_family_care_ad_works_looker_table.comparison_mode
+    row: 7
+    col: 4
+    width: 4
+    height: 3
+
+  - name: aw_kpi_cvr
+    title: "CVR"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: single_value
+    fields: [american_family_care_ad_works_looker_table.cvr_cur, american_family_care_ad_works_looker_table.cvr_pop]
+    filters:
+      american_family_care_ad_works_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_range
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+      KPI Comparison: american_family_care_ad_works_looker_table.comparison_mode
+    row: 7
+    col: 8
+    width: 4
+    height: 3
+
+  - name: aw_kpi_cpa
+    title: "CPA"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: single_value
+    fields: [american_family_care_ad_works_looker_table.cpa_cur, american_family_care_ad_works_looker_table.cpa_pop]
+    filters:
+      american_family_care_ad_works_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_range
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+      KPI Comparison: american_family_care_ad_works_looker_table.comparison_mode
+    row: 7
+    col: 12
+    width: 4
+    height: 3
+
+  - name: aw_kpi_bookings
+    title: "Bookings"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: single_value
+    fields: [american_family_care_ad_works_looker_table.bookings_cur, american_family_care_ad_works_looker_table.bookings_pop]
+    filters:
+      american_family_care_ad_works_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_range
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+      KPI Comparison: american_family_care_ad_works_looker_table.comparison_mode
+    row: 7
+    col: 16
+    width: 4
+    height: 3
+
+  - name: aw_kpi_cost_per_booking
+    title: "Cost per booking"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: single_value
+    fields: [american_family_care_ad_works_looker_table.cost_per_booking_cur, american_family_care_ad_works_looker_table.cost_per_booking_pop]
+    filters:
+      american_family_care_ad_works_looker_table.in_cmp_scope: "Yes"
+    limit: 1
+    show_view_names: false
+    custom_color_enabled: true
+    show_single_value_title: true
+    show_comparison: true
+    comparison_type: value
+    show_comparison_label: true
+    comparison_label: "vs PP"
+    enable_conditional_formatting: false
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_range
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+      KPI Comparison: american_family_care_ad_works_looker_table.comparison_mode
+    row: 7
+    col: 20
+    width: 4
+    height: 3
+
+  - name: AW Granularity
+    type: filter
+    tab_name: AdWorks
+    row: 10
+    col: 4
+    width: 6
+    height: 1
+    ui_config:
+      type: dropdown_menu
+      display: overflow
+
+  - name: aw_trend
+    title: "Spend vs conversions over time"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: looker_column
+    fields: [american_family_care_ad_works_looker_table.dynamic_date, american_family_care_ad_works_looker_table.total_cost, american_family_care_ad_works_looker_table.engine_conversions]
+    sorts: [american_family_care_ad_works_looker_table.dynamic_date]
+    limit: 500
+    show_view_names: false
+    x_axis_gridlines: false
+    y_axis_gridlines: true
+    show_value_labels: false
+    legend_position: center
+    point_style: none
+    series_types:
+      american_family_care_ad_works_looker_table.engine_conversions: line
+    series_colors:
+      american_family_care_ad_works_looker_table.total_cost: "#E31837"
+      american_family_care_ad_works_looker_table.engine_conversions: "#1D1D1B"
+    y_axes: [{label: '', orientation: left, series: [{axisId: american_family_care_ad_works_looker_table.total_cost, id: american_family_care_ad_works_looker_table.total_cost}], showLabels: true, showValues: true, type: linear},
+      {label: '', orientation: right, series: [{axisId: american_family_care_ad_works_looker_table.engine_conversions, id: american_family_care_ad_works_looker_table.engine_conversions}], showLabels: true, showValues: true, type: linear}]
+    listen:
+      AW Granularity: american_family_care_ad_works_looker_table.date_granularity
+      Date Range: american_family_care_ad_works_looker_table.date_date
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+    row: 11
+    col: 4
+    width: 20
+    height: 8
+
+  - name: aw_band_franchisee
+    type: text
+    title_text: ""
+    tab_name: AdWorks
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">By franchisee</span></div>'
+    row: 19
+    col: 4
+    width: 20
+    height: 2
+
+  - name: aw_by_franchisee
+    title: "Performance by franchisee"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: looker_grid
+    fields: [american_family_care_ad_works_looker_table.franchisee, american_family_care_ad_works_looker_table.clinic_count, american_family_care_ad_works_looker_table.accounts, american_family_care_ad_works_looker_table.total_cost, american_family_care_ad_works_looker_table.total_clicks, american_family_care_ad_works_looker_table.ctr, american_family_care_ad_works_looker_table.cpc, american_family_care_ad_works_looker_table.engine_conversions, american_family_care_ad_works_looker_table.cvr, american_family_care_ad_works_looker_table.cpa, american_family_care_ad_works_looker_table.bookings, american_family_care_ad_works_looker_table.cost_per_booking, american_family_care_ad_works_looker_table.discharged_patients]
+    sorts: [american_family_care_ad_works_looker_table.total_cost desc]
+    limit: 500
+    show_view_names: false
+    show_row_numbers: false
+    show_totals: true
+    table_theme: white
+    limit_displayed_rows: false
+    enable_conditional_formatting: false
+    header_font_size: 12
+    rows_font_size: 12
+    series_cell_visualizations:
+      american_family_care_ad_works_looker_table.total_cost:
+        is_active: true
+      american_family_care_ad_works_looker_table.engine_conversions:
+        is_active: true
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_date
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+    row: 21
+    col: 4
+    width: 20
+    height: 6
+
+  - name: aw_spend_by_franchisee
+    title: "Spend by franchisee over time"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: looker_column
+    fields: [american_family_care_ad_works_looker_table.dynamic_date, american_family_care_ad_works_looker_table.franchisee, american_family_care_ad_works_looker_table.total_cost]
+    pivots: [american_family_care_ad_works_looker_table.franchisee]
+    sorts: [american_family_care_ad_works_looker_table.dynamic_date]
+    limit: 500
+    show_view_names: false
+    stacking: normal
+    column_limit: 12
+    x_axis_gridlines: false
+    y_axis_gridlines: true
+    show_value_labels: false
+    legend_position: center
+    listen:
+      AW Granularity: american_family_care_ad_works_looker_table.date_granularity
+      Date Range: american_family_care_ad_works_looker_table.date_date
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+    row: 27
+    col: 4
+    width: 10
+    height: 8
+
+  - name: aw_cpa_by_franchisee
+    title: "CPA by franchisee (lower is better)"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: looker_bar
+    fields: [american_family_care_ad_works_looker_table.franchisee, american_family_care_ad_works_looker_table.cpa]
+    sorts: [american_family_care_ad_works_looker_table.cpa]
+    limit: 50
+    show_view_names: false
+    show_value_labels: true
+    legend_position: center
+    x_axis_gridlines: false
+    y_axis_gridlines: true
+    series_colors:
+      american_family_care_ad_works_looker_table.cpa: "#1D1D1B"
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_date
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+    row: 27
+    col: 14
+    width: 10
+    height: 8
+
+  - name: aw_band_accounts
+    type: text
+    title_text: ""
+    tab_name: AdWorks
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Accounts and clinics</span></div>'
+    row: 35
+    col: 4
+    width: 20
+    height: 2
+
+  - name: aw_accounts
+    title: "Accounts and clinics"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: looker_grid
+    fields: [american_family_care_ad_works_looker_table.account, american_family_care_ad_works_looker_table.account_id, american_family_care_ad_works_looker_table.franchisee, american_family_care_ad_works_looker_table.clinic_ids, american_family_care_ad_works_looker_table.clinics, american_family_care_ad_works_looker_table.state, american_family_care_ad_works_looker_table.dma, american_family_care_ad_works_looker_table.clinic_count, american_family_care_ad_works_looker_table.total_cost, american_family_care_ad_works_looker_table.total_clicks, american_family_care_ad_works_looker_table.engine_conversions, american_family_care_ad_works_looker_table.cpa, american_family_care_ad_works_looker_table.bookings]
+    sorts: [american_family_care_ad_works_looker_table.total_cost desc]
+    limit: 500
+    show_view_names: false
+    show_row_numbers: false
+    show_totals: true
+    table_theme: white
+    limit_displayed_rows: false
+    enable_conditional_formatting: false
+    header_font_size: 12
+    rows_font_size: 12
+    series_cell_visualizations:
+      american_family_care_ad_works_looker_table.total_cost:
+        is_active: true
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_date
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+    row: 37
+    col: 4
+    width: 20
+    height: 7
+
+  - name: aw_band_conversions
+    type: text
+    title_text: ""
+    tab_name: AdWorks
+    body_text: '<div style="display:flex;justify-content:center;align-items:center;height:56px;border-radius:16px;background:linear-gradient(90deg,#A5111F 0%,#E31837 50%,#A5111F 100%);box-shadow:0 2px 8px rgba(165,17,31,.20);"><span style="font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:600;color:white;letter-spacing:0.8px;text-transform:uppercase;">Conversions and campaigns</span></div>'
+    row: 44
+    col: 4
+    width: 20
+    height: 2
+
+  - name: aw_conv_types
+    title: "Conversions by type and franchisee"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: looker_grid
+    fields: [american_family_care_ad_works_looker_table.franchisee, american_family_care_ad_works_looker_table.bookings, american_family_care_ad_works_looker_table.discharged_patients, american_family_care_ad_works_looker_table.calls, american_family_care_ad_works_looker_table.engine_conversions, american_family_care_ad_works_looker_table.all_conversions, american_family_care_ad_works_looker_table.booking_to_visit_rate]
+    sorts: [american_family_care_ad_works_looker_table.engine_conversions desc]
+    limit: 500
+    show_view_names: false
+    show_row_numbers: false
+    show_totals: true
+    table_theme: white
+    limit_displayed_rows: false
+    enable_conditional_formatting: false
+    header_font_size: 12
+    rows_font_size: 12
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_date
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+    row: 46
+    col: 4
+    width: 10
+    height: 8
+
+  - name: aw_top_campaigns
+    title: "Top 25 campaigns by spend"
+    tab_name: AdWorks
+    model: afc_search
+    explore: american_family_care_ad_works_looker_table
+    type: looker_grid
+    fields: [american_family_care_ad_works_looker_table.account, american_family_care_ad_works_looker_table.campaign, american_family_care_ad_works_looker_table.total_cost, american_family_care_ad_works_looker_table.total_clicks, american_family_care_ad_works_looker_table.engine_conversions, american_family_care_ad_works_looker_table.cpa]
+    sorts: [american_family_care_ad_works_looker_table.total_cost desc]
+    limit: 25
+    show_view_names: false
+    show_row_numbers: false
+    show_totals: true
+    table_theme: white
+    limit_displayed_rows: false
+    enable_conditional_formatting: false
+    header_font_size: 12
+    rows_font_size: 12
+    series_cell_visualizations:
+      american_family_care_ad_works_looker_table.total_cost:
+        is_active: true
+    listen:
+      Date Range: american_family_care_ad_works_looker_table.date_date
+      Conversion Type: american_family_care_ad_works_looker_table.conversion_actions
+      AW Franchisee: american_family_care_ad_works_looker_table.franchisee
+      AW Account: american_family_care_ad_works_looker_table.account
+      AW State: american_family_care_ad_works_looker_table.state
+    row: 46
+    col: 14
+    width: 10
     height: 8
